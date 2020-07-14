@@ -1,0 +1,17 @@
+{
+  "name": "fii-bot",
+  "version": "1.0.0",
+  "description": "Le bot de la FII",
+  "main": "index.js",
+  "repository": "https://github.com/federation-interservices-d-informatique/bot.git",
+  "author": "FII",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "nodemon": "^2.0.4"
+  }
+}
