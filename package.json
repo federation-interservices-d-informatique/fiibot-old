@@ -1,0 +1,16 @@
+{
+  "name": "fiibot",
+  "version": "1.0.0",
+  "description": "Le bot Discord de la FII",
+  "main": "index.js",
+  "repository": "https://github.com/federation-interservices-d-informatique/bot.git",
+  "author": "FII",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "typescript": "^3.9.7"
+  },
+  "devDependencies": {
+    "eslint": "^7.7.0"
+  }
+}
