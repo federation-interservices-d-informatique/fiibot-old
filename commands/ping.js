@@ -14,6 +14,6 @@ module.exports = class ping extends Command {
         let send = Date.now();
         message.channel.send('Mesure...').then(m => {
             m.edit(`Pong! En ${Date.now() - send}ms`);
-        })
+        });
     }
 };
