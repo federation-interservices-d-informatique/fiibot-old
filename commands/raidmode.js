@@ -25,6 +25,9 @@ module.exports = class raidmode extends Command {
                     color: 'RED'
                 }
             });
+            
+            this.client.user.setActivity('gérer la FII');
+
         } else {
             message.channel.send('', { embed: {
                 title: 'Raidmode',
@@ -39,6 +42,8 @@ module.exports = class raidmode extends Command {
                     color: 'RED'
                 }
             });
+            this.client.user.setActivity('protéger la FII');
+            
         }
     }
 };
