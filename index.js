@@ -11,3 +11,6 @@ const client = new FIIB({
     fiim: fiiMembers,
     commandPath: [`${__dirname}/commands`]
 });
+client.on('ready', () => {
+    client.user.setActivity('gérer la FII');
+});
