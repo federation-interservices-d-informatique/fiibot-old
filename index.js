@@ -14,3 +14,20 @@ const client = new FIIB({
 client.on('ready', () => {
     client.user.setActivity('gérer la FII');
 });
+client.on('guildMemberAdd', (member) => {
+    if(client.raidmode) {
+        member.user.send('', {embed: {
+            title: 'Vous avez été expulsé!',
+            description: `Le serveur ${member.guild.name} est actuellement en Raidmode, revenez plus tard!`,
+            footer: {
+                text: 'RaidMode de FIIBOT',
+                iconURL: client.user.avatarURL({
+                    format: 'png'
+                })
+            },
+            color: 'RED'
+        }});
+        member.kick('RAIDMODE');
+
+    }
+});
