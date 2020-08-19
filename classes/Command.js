@@ -1,7 +1,7 @@
 class Command {
     constructor(client, info) {
         
-        Object.defineProperty(this, 'client', client);
+        this.client = client;
         this.name = info.name;
         this.description = info.description || 'Non définie';
         this.aliases = info.aliases || [];
