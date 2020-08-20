@@ -21,7 +21,7 @@ module.exports = class raidmode extends Command {
             this.client.channels.cache.get('705372306481872963').send('', {
                 embed: {
                     title: 'Raidmode', 
-                    description: `Le raidmode a été désactivé par ${message.author.tag}`,
+                    description: `Le raidmode a été désactivé par ${message.author.tag} sur ${message.guild.name}`,
                     color: 'RED'
                 }
             });
@@ -38,7 +38,7 @@ module.exports = class raidmode extends Command {
             this.client.channels.cache.get('705372306481872963').send('', {
                 embed: {
                     title: 'Raidmode', 
-                    description: `Le raidmode a été activé par ${message.author.tag}`,
+                    description: `Le raidmode a été activé par ${message.author.tag} sur ${message.guild.name}`,
                     color: 'RED'
                 }
             });
