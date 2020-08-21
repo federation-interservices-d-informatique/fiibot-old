@@ -26,3 +26,4 @@ if [[ $1 == "reinstall" ]]; then
         fi
     fi
 fi
+pm2 start --name "${NAME}" --log "${NAME}.log" index.js
