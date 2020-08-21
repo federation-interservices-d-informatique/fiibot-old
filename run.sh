@@ -3,6 +3,13 @@ NAME="fiibot"
 if [[ "ps -ef | grep -i ${NAME} | grep -v grep" ]]; then
     pm2 stop "${NAME}"
 fi
+PSUM="$(sha256sum package.json)"
+if [[ -d ".git" ]]; then
+	git pull
+fi
+if [[ "${PSUM}" != "$(sha256sum package.json)"  ]]; then
+	rm -rf "./node_modules"
+fi
 if [[ ! -d "./node_modules" ]]; then
     npm install --production
     if [[ $? != 0 ]]; then
