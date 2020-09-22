@@ -1,5 +1,5 @@
 const Command = require('../classes/Command');
-module.exports = class helpcmd extends Command {
+module.exports = class extends Command {
     constructor(client) {
         super(client, {
             name: 'help',
@@ -13,7 +13,7 @@ module.exports = class helpcmd extends Command {
     run(message){
         let ebd = {
             title: `Aide de ${this.client.user.username}`,
-            description: `Voici la liste des commandes que vous pouvez executer avec \`${this.client.options.prefix}commande\`.`,
+            description: `Voici la liste des commandes que vous pouvez exécuter avec \`${this.client.options.prefix}commande\`.`,
             fields: [],
             color: 'RANDOM',
             footer: {
