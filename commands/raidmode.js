@@ -1,5 +1,5 @@
 const Command = require('../classes/Command');
-module.exports = class raidmode extends Command {
+module.exports = class extends Command {
     constructor(client) {
         super(client, {
             name: 'raidmode',
