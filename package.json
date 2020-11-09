@@ -2,23 +2,17 @@
   "name": "fiibot",
   "version": "1.0.0",
   "description": "Le bot Discord de la FII",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": "https://github.com/federation-interservices-d-informatique/bot.git",
   "author": "FII",
   "license": "MIT",
-  "@types/node": "^14.6.0",
   "dependencies": {
-    "better-sqlite-pool": "^0.3.0",
-    "better-sqlite3": "^7.1.0",
-    "chalk": "^4.1.0",
-    "discord.js": "^12.3.1",
-    "dotenv": "^8.2.0",
-    "enmap": "^5.6.1"
-  },
-  "scripts": {
-    "dev": "nodemon index.js"
+    "discord.js": "^12.4.1",
+    "discordjs-moka": "^3.0.5",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
-    "eslint": "^7.7.0"
+    "@types/node": "^14.14.6",
+    "typescript": "^4.0.5"
   }
 }

@@ -1,16 +1,20 @@
-const Command = require('../classes/Command');
+import Client from "../classes/Client";
+import Command from "../classes/Command"
+import { mokaMessage } from "discordjs-moka"
+import { TextChannel } from "discord.js";
 module.exports = class extends Command {
-    constructor(client) {
+    constructor(client: Client) {
         super(client, {
             name: 'raidmode',
             description: 'Lancer le raidmode',
             aliases: [
                 'raid'
             ],
-            fiiOnly: true
+            ownerOnly: true,
+            usage: 'raidmode'
         });
     }
-    run(message) {
+    run(message: mokaMessage) {
         if(this.client.raidmode) {
             message.channel.send('', { embed:  {
                 title: 'Raidmode',
@@ -18,7 +22,8 @@ module.exports = class extends Command {
                 color: 'RED'
             }});
             this.client.raidmode = false;
-            this.client.channels.cache.get('705372306481872963').send('', {
+            let chan = this.client.channels.cache.get('705372306481872963') as TextChannel
+            chan.send('', {
                 embed: {
                     title: 'Raidmode', 
                     description: `Le raidmode a été désactivé par ${message.author.tag} sur ${message.guild.name}`,
@@ -35,7 +40,9 @@ module.exports = class extends Command {
                 color: 'RED'
             }});
             this.client.raidmode = true;
-            this.client.channels.cache.get('705372306481872963').send('', {
+            let chan = this.client.channels.cache.get('705372306481872963') as TextChannel
+           if( chan.type === "text") {
+            chan.send('', {
                 embed: {
                     title: 'Raidmode', 
                     description: `Le raidmode a été activé par ${message.author.tag} sur ${message.guild.name}`,
@@ -43,7 +50,7 @@ module.exports = class extends Command {
                 }
             });
             this.client.user.setActivity('protéger la FII');
-            
+        } 
         }
     }
 };

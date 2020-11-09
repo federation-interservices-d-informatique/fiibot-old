@@ -1,4 +1,12 @@
-#!/usr/bin/env/bash
+#!/usr/bin/env bash
+function Install-NodeModules {
+    npm install 
+    if [[ $? != 0 ]]; then
+        echo "Erreur lors de l'installation des modules!"
+        exit 1    
+    fi
+}
+
 NAME="fiibot"
 if [[ "ps -ef | grep -i ${NAME} | grep -v grep" ]]; then
     pm2 stop "${NAME}"
@@ -11,26 +19,9 @@ if [[ "${PSUM}" != "$(sha256sum package.json)"  ]]; then
 	rm -rf "./node_modules"
 fi
 if [[ ! -d "./node_modules" ]]; then
-    npm install --production
-    if [[ $? != 0 ]]; then
-        echo "Erreur lors de l'installation des modules!"
-        exit 1    
-    fi
+    Install-NodeModules
 fi
-if [[ $1 == "reinstall" ]]; then
-    if [[ -d "./node_modules" ]]; then
-        rm -rf "./node_modules"
-        npm install --production
-        if [[ $? != 0 ]]; then
-            echo "Erreur lors de l'installation des modules!"
-            exit 1    
-        fi
-    else 
-        npm install --production
-        if [[ $? != 0 ]]; then
-            echo "Erreur lors de l'installation des modules!"
-            exit 1    
-        fi
-    fi
+if [[ ! -d "dist" ]]; then
+    npx tsc
 fi
-pm2 start --name "${NAME}" --log "${NAME}.log" index.js
+pm2 start --name "${NAME}" --log "${NAME}.log" dist/index.js
