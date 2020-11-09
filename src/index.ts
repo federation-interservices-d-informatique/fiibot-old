@@ -1,20 +1,26 @@
-const {
-    fiiMembers, owners
-} = require('./config');
-
-require('dotenv').config();
-const FIIB = require('./classes/client');
-const client = new FIIB({
+import {
+    config as envconfig 
+} from "dotenv"
+envconfig()
+import {  mokaHandler } from "discordjs-moka"
+import Client from "./classes/Client"
+import { GuildMember } from "discord.js";
+const client = new Client({},{
     token: process.env.TOKEN,
-    prefix: '&',
-    owners: owners,
-    fiim: fiiMembers,
-    commandPath: [`${__dirname}/commands`]
+    prefix: '$',
+    owner: [743851266635071710]
 });
+client.setHandler(new mokaHandler(client, {
+    loadDefault: true,
+    commandPath: [
+        `${__dirname}/commands`
+    ]
+}));
+client.handler.init();
 client.on('ready', () => {
     client.user.setActivity('gérer la FII');
 });
-client.on('guildMemberAdd', (member) => {
+client.on('guildMemberAdd', (member: GuildMember) => {
     if (client.raidmode) {
         member.user.send('', {
             embed: {
