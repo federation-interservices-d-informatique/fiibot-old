@@ -1,5 +1,7 @@
-const Command = require('../classes/Command');
-module.exports = class botinfo extends Command {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Command_1 = require("../classes/Command");
+module.exports = class botinfo extends Command_1.default {
     constructor(client) {
         super(client, {
             name: 'botinfo',
@@ -12,7 +14,7 @@ module.exports = class botinfo extends Command {
     run(message) {
         message.channel.send('', {
             embed: {
-                title: `Informations de ${this.client.user.username}`, 
+                title: `Informations de ${this.client.user.username}`,
                 footer: {
                     icon_url: this.client.user.avatarURL({
                         format: 'png'
@@ -23,7 +25,7 @@ module.exports = class botinfo extends Command {
                 fields: [
                     {
                         name: 'Mon préfixe:',
-                        value: this.client.options.prefix
+                        value: this.client.moka.prefix
                     },
                     {
                         name: 'Sources:',
@@ -37,4 +39,4 @@ module.exports = class botinfo extends Command {
             }
         });
     }
-}; 
+};
