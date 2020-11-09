@@ -2,12 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = require("dotenv");
 dotenv_1.config();
+const config_1 = require("./config");
 const discordjs_moka_1 = require("discordjs-moka");
 const Client_1 = require("./classes/Client");
 const client = new Client_1.default({}, {
     token: process.env.TOKEN,
     prefix: '$',
-    owner: [743851266635071710]
+    owner: config_1.owners
 });
 client.setHandler(new discordjs_moka_1.mokaHandler(client, {
     loadDefault: true,

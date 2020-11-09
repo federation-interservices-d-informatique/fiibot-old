@@ -2,13 +2,16 @@ import {
     config as envconfig 
 } from "dotenv"
 envconfig()
+import {
+    owners
+} from "./config"
 import {  mokaHandler } from "discordjs-moka"
 import Client from "./classes/Client"
 import { GuildMember } from "discord.js";
 const client = new Client({},{
     token: process.env.TOKEN,
     prefix: '$',
-    owner: [743851266635071710]
+    owner: owners
 });
 client.setHandler(new mokaHandler(client, {
     loadDefault: true,
