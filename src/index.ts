@@ -10,7 +10,7 @@ import Client from "./classes/Client"
 import { GuildMember } from "discord.js";
 const client = new Client({},{
     token: process.env.TOKEN,
-    prefix: '&',
+    prefix: process.env.PREFIX,
     owner: owners
 });
 client.setHandler(new mokaHandler(client, {
