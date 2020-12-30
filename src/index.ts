@@ -4,10 +4,6 @@ import { owners } from "./config";
 import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import { GuildMember } from "discord.js";
-import { notEqual } from "assert";
-import { POINT_CONVERSION_COMPRESSED } from "constants";
-import { setImmediate } from "timers";
-import { setMaxListeners } from "process";
 const client = new Client(
   {},
   {
