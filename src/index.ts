@@ -26,6 +26,7 @@ client.handler.init();
 client.on("ready", () => {
   client.user.setActivity("gérer la FII");
   client.msgcache = new Map();
+  // Reset for preventing performance issues
 });
 client.on("guildMemberAdd", async (member: GuildMember) => {
   if (client.raidmode) {
@@ -45,22 +46,32 @@ client.on("guildMemberAdd", async (member: GuildMember) => {
     member.kick("RAIDMODE");
   }
 });
-client.on('message', (msg: mokaMessage) => {
-  if(msg.author.bot) return;
-  if(!client.msgcache.get(msg.author.id)) {
+client.on("message", (msg: mokaMessage) => {
+  if (msg.author.bot) return;
+  if (msg.member.hasPermission("ADMINISTRATOR")) {
+    return; // Ignore admins
+  }
+  if (!client.msgcache.get(msg.author.id)) {
     client.msgcache.set(msg.author.id, new Array());
   }
   let msgs = client.msgcache.get(msg.author.id);
   msgs.push(msg);
   client.msgcache.set(msg.author.id, msgs);
-  let dupe = client.msgcache.get(msg.author.id).filter(m => {
-    if ((m.createdTimestamp > (msg.createdTimestamp - 7000)) ) {
-      return true
+  let dupe = client.msgcache.get(msg.author.id).filter((m) => {
+    if (m.createdTimestamp > msg.createdTimestamp - 7000) {
+      return true;
     }
-    return false
-  })
-  if(dupe.length >= 5) {
-    client.msgcache.set(msg.author.id, null);
-    msg.channel.send('SPAM')
+    return false;
+  });
+  if (dupe.length >= 5) {
+    msg.author.send(`Vous avez été éjecté(e) de ${msg.guild.name} pour spam!`);
+    msg.channel.send(`${msg.author} a été kick pour spam!`);
+    msg.member.kick(`Spam dans ${msg.channel}`);
+    dupe.forEach(async (m) => {
+      try {
+        await m.fetch();
+        if (!m.deleted) m.delete();
+      } catch (e) {}
+    });
   }
 });
