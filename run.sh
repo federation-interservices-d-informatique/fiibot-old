@@ -21,7 +21,5 @@ fi
 if [[ ! -d "./node_modules" ]]; then
     Install-NodeModules
 fi
-if [[ ! -d "dist" ]]; then
-    npx tsc
-fi
+npx tsc
 pm2 start --name "${NAME}" --log "${NAME}.log" dist/index.js
