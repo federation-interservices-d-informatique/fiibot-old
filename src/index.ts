@@ -77,3 +77,6 @@ client.on("message", (msg: mokaMessage) => {
     });
   }
 });
+if(process.env.DEBUG == "true") {
+  client.on('debug', console.log);
+}
