@@ -1,7 +1,8 @@
-import { Command, mokaMessage } from "discordjs-moka";
+import { mokaMessage } from "discordjs-moka";
+import fiiCommand from "../classes/Command";
 
 module.exports = class extends (
-  Command
+  fiiCommand
 ) {
   constructor(client) {
     super(client, {
