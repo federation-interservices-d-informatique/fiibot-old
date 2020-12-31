@@ -1,6 +1,6 @@
 import { config as envconfig } from "dotenv";
 envconfig();
-import { owners, spamchans } from "./config";
+import { owners } from "./config";
 import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import { GuildMember, TextChannel } from "discord.js";
@@ -50,8 +50,9 @@ client.on("guildMemberAdd", async (member: GuildMember) => {
 });
 
 client.on("message", async (msg: mokaMessage) => {
-  if(msg.partial) await msg.fetch();
+  if (msg.partial) await msg.fetch();
   if (msg.author.bot) return;
+  const spamchans: Array<string> = msg.guild.settings.get('ignorespam') || new Array(); 
   if (spamchans.includes(msg.channel.id)) return;
   if (msg.member.hasPermission("ADMINISTRATOR") || client.isOwner(msg.author)) {
     return; // Ignore admins
@@ -79,6 +80,7 @@ client.on("message", async (msg: mokaMessage) => {
       } catch (e) {}
     });
   }
+  
 });
 if (process.env.DEBUG == "true") {
   client.on("debug", console.log);
@@ -90,11 +92,7 @@ client.on("messageDelete", async (msg: mokaMessage) => {
       await msg.fetch(true);
     } catch(e) {}
   }
-  const auditLogs = await msg.guild.fetchAuditLogs({
-		limit: 1,
-		type: 'MESSAGE_DELETE',
-  });
-  const lg = auditLogs.entries.first();
+  
   const chan = client.channels.resolve(msg.guild.settings.get('logchan')) as TextChannel;
   if(!chan) return;
   chan.send('', {
@@ -110,10 +108,6 @@ client.on("messageDelete", async (msg: mokaMessage) => {
         {
           name: 'Contenu',
           value: `\`\`\`${msg.content} \`\`\``
-        },
-        {
-          name: 'Supprimé par',
-          value: `\`\`\`${lg.executor.username ?? "Iconnu" }\`\`\``
         }
       ]
     }

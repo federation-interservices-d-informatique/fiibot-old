@@ -12,8 +12,3 @@ const owners = [
   606658458649100288, // Abysmal#3490
 ]; // Fii members
 export { owners };
-const spamchans = [
-  '653337944911773716', // LPT: #dev-null
-  '791304750318223391', // MIM: #buches
-] // Ignored channels for antispam
-export { spamchans }
