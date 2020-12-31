@@ -14,7 +14,7 @@ module.exports = class extends (
       usage: "raidmode",
     });
   }
-  run(message: mokaMessage) {
+  async run(message: mokaMessage) {
     if (this.client.raidmode) {
       message.channel.send("", {
         embed: {
@@ -24,17 +24,16 @@ module.exports = class extends (
         },
       });
       this.client.raidmode = false;
-      let chan = this.client.channels.cache.get(
-        "705372306481872963"
-      ) as TextChannel;
-      chan.send("", {
-        embed: {
-          title: "Raidmode",
-          description: `Le raidmode a été désactivé par ${message.author.tag} sur ${message.guild.name}`,
-          color: "RED",
-        },
-      });
-
+      let chan = await this.client.channels.fetch(this.client.fii.critLogChan, true, true) as TextChannel;
+      if (chan) {
+        chan.send("", {
+          embed: {
+            title: "Raidmode",
+            description: `Le raidmode a été désactivé par ${message.author.tag} sur ${message.guild.name}`,
+            color: "RED",
+          },
+        });
+      }
       this.client.user.setActivity("gérer la FII");
     } else {
       message.channel.send("", {
@@ -45,10 +44,8 @@ module.exports = class extends (
         },
       });
       this.client.raidmode = true;
-      let chan = this.client.channels.cache.get(
-        "705372306481872963"
-      ) as TextChannel;
-      if (chan.type === "text") {
+      let chan = await this.client.channels.fetch(this.client.fii.critLogChan.toString(), true, true) as TextChannel;
+      if (chan) {
         chan.send("", {
           embed: {
             title: "Raidmode",
@@ -61,4 +58,3 @@ module.exports = class extends (
     }
   }
 };
- 
