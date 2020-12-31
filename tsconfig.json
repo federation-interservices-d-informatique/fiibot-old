@@ -3,7 +3,8 @@
         "rootDir": "src/", 
         "target": "esnext",
         "outDir": "dist/",
-        "module": "CommonJS"
+        "module": "CommonJS",
+        "esModuleInterop": true
     },
     "include": [
         "src/**/*"
