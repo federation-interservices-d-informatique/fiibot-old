@@ -1,6 +1,6 @@
 import { config as envconfig } from "dotenv";
 envconfig();
-import { owners } from "./config";
+import { owners, spamchans } from "./config";
 import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import { GuildMember } from "discord.js";
@@ -49,7 +49,8 @@ client.on("guildMemberAdd", async (member: GuildMember) => {
 
 client.on("message", (msg: mokaMessage) => {
   if (msg.author.bot) return;
-  if (msg.member.hasPermission("ADMINISTRATOR")) {
+  if(spamchans.includes(msg.channel.id)) return;
+  if (msg.member.hasPermission("ADMINISTRATOR") || client.isOwner(msg.author)) {
     return; // Ignore admins
   }
   if (!client.msgcache.get(msg.author.id)) {
