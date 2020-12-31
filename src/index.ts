@@ -13,7 +13,7 @@ const client = new Client(
   },
   {
     owners: owners,
-    critLogChan: '705372306481872963',
+    critLogChan: "705372306481872963",
   }
 );
 client.setHandler(
@@ -49,7 +49,7 @@ client.on("guildMemberAdd", async (member: GuildMember) => {
 
 client.on("message", (msg: mokaMessage) => {
   if (msg.author.bot) return;
-  if(spamchans.includes(msg.channel.id)) return;
+  if (spamchans.includes(msg.channel.id)) return;
   if (msg.member.hasPermission("ADMINISTRATOR") || client.isOwner(msg.author)) {
     return; // Ignore admins
   }
