@@ -7,8 +7,12 @@ export default class FIIClient extends mokaClient {
   fii: FiiConfiguration;
   constructor(djsOpts: ClientOptions, mokaOpts: mokaClientOptions, fiiOpts: FiiConfiguration) {
     super(djsOpts, mokaOpts);
+    if(!fiiOpts.critLogChan) {
+      throw new Error(`Please add a valid channel for critical logs!`)
+    }
     this.fii = {
-      owners: fiiOpts.owners ?? fiiOpts.owners
+      owners: fiiOpts.owners ?? fiiOpts.owners,
+      critLogChan: fiiOpts.critLogChan    
     };
   }
 }

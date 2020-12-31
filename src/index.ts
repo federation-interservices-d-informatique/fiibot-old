@@ -12,7 +12,8 @@ const client = new Client(
     owner: owners,
   },
   {
-    owners: owners
+    owners: owners,
+    critLogChan: '705372306481872963',
   }
 );
 client.setHandler(
