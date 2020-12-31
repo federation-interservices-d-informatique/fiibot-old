@@ -28,12 +28,12 @@ module.exports = class botinfo extends (
             value: this.client.moka.prefix,
           },
           {
-            name: "<:soft_github:775733416271806465> Sources:",
+            name: "<:octocat:793998492787802142> Sources:",
             value:
               "[GitHub](https://github.com/federation-interservices-d-informatique/bot)",
           },
           {
-            name: "<:fii:707022782696783972> FII - Hub central Discord:",
+            name: "<:fii:793998547594117182> FII - Hub central Discord:",
             value: "[Invitation](https://discord.com/invite/KNUsJgG)",
           },
         ],
