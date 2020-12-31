@@ -119,3 +119,36 @@ client.on("messageDelete", async (msg: mokaMessage) => {
     }
   })
 });
+client.on('messageUpdate', async (oldm: mokaMessage, newm: mokaMessage) => {
+
+  if(!newm.guild) return;
+  if(newm.partial) {
+    try {
+      await newm.fetch();
+    } catch(e) {}
+  }
+  if(newm.content === oldm.content) return;
+  const chan = client.channels.resolve(newm.guild.settings.get('logchan')) as TextChannel;
+  if(!chan) return;
+  chan.send('', {
+    embed: {
+      description: `**Un message de ${newm.author} dans ${newm.channel} a été modifié**`,
+      color: 'RED',
+      footer: {
+        icon_url: `${newm.guild.iconURL({dynamic: true})}`,
+        text: `Logs de ${newm.guild.name}`
+      },
+      timestamp: new Date(),
+      fields: [
+        {
+          name: 'Nouveau contenu:',
+          value: `\`\`\`${newm.content} \`\`\``
+        },
+        {
+          name: 'Ancien contenu:',
+          value: `\`\`\`${oldm.content}\`\`\``
+        }
+      ]
+    }
+  })
+});
