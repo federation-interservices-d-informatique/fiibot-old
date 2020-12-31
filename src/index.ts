@@ -10,6 +10,9 @@ const client = new Client(
     token: process.env.TOKEN,
     prefix: process.env.PREFIX,
     owner: owners,
+  },
+  {
+    owners: owners
   }
 );
 client.setHandler(
