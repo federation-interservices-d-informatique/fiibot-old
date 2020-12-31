@@ -14,20 +14,22 @@ module.exports = class Report extends (
   async run(message: mokaMessage, args: string[]) {
     if (!args[0] || !args[1]) {
       message.channel.send(
-        `${message.author}! Veuillez préciser qui signaler!`
+        `${message.author}! Veuillez préciser qui signaler! et pourquoi!`
       );
+      return;
     }
-    let user = this.client.users.resolve(args[0]);
+    let user = await this.client.users.fetch(args[0]) || message.mentions.users.first();
     if (!user) {
       return message.channel.send("Impossible de trouver l'utilisateur!");
     }
+    const reason = args.slice(1).join(' ')
     message.channel.send("", {
       embed: {
         title: `Report de ${user.username}`,
         fields: [
           {
             name: "Raison:",
-            value: `${args[1]}`,
+            value: `${reason}`,
           },
         ],
         timestamp: new Date(),
