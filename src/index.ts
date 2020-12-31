@@ -64,7 +64,7 @@ client.on("message", (msg: mokaMessage) => {
     }
     return false;
   });
-  if (dupe.length >= 5) {
+  if (dupe.length >= 7) {
     msg.author.send(`Vous avez été éjecté(e) de ${msg.guild.name} pour spam!`);
     msg.channel.send(`${msg.author} a été kick pour spam!`);
     msg.member.kick(`Spam dans ${msg.channel}`);
