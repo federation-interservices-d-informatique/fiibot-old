@@ -59,7 +59,7 @@ client.on("message", (msg: mokaMessage) => {
   let msgs = client.msgcache.get(msg.author.id);
   msgs.push(msg);
   client.msgcache.set(msg.author.id, msgs);
-  let dupe = client.msgcache.get(msg.author.id).filter((m) => {
+  const dupe = client.msgcache.get(msg.author.id).filter((m) => {
     if (m.createdTimestamp > msg.createdTimestamp - 7000) {
       return true;
     }
