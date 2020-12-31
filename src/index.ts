@@ -3,7 +3,7 @@ envconfig();
 import { owners, spamchans } from "./config";
 import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
-import { GuildMember } from "discord.js";
+import { GuildMember, TextChannel } from "discord.js";
 const client = new Client(
   {},
   {
@@ -77,6 +77,37 @@ client.on("message", (msg: mokaMessage) => {
     });
   }
 });
-if(process.env.DEBUG == "true") {
-  client.on('debug', console.log);
+if (process.env.DEBUG == "true") {
+  client.on("debug", console.log);
 }
+client.on("messageDelete", async (msg: mokaMessage) => {
+  if(!msg.guild) return;
+  const auditLogs = await msg.guild.fetchAuditLogs({
+		limit: 1,
+		type: 'MESSAGE_DELETE',
+  });
+  const lg = auditLogs.entries.first();
+  const chan = client.channels.resolve(msg.guild.settings.get('logchan')) as TextChannel;
+  if(!chan) return;
+  chan.send('', {
+    embed: {
+      description: `**Un message de ${msg.author.username} dans ${msg.channel} a été supprimé**`,
+      color: 'RED',
+      footer: {
+        icon_url: `${msg.guild.iconURL({dynamic: true})}`,
+        text: `Logs de ${msg.guild.name}`
+      },
+      timestamp: new Date(),
+      fields: [
+        {
+          name: 'Contenu',
+          value: `\`\`\`${msg.content} \`\`\``
+        },
+        {
+          name: 'Auteur',
+          value: `\`\`\`${lg.executor.username ?? "Iconnu" }\`\`\``
+        }
+      ]
+    }
+  })
+});
