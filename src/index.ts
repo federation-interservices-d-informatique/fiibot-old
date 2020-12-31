@@ -5,7 +5,9 @@ import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import { GuildMember, TextChannel } from "discord.js";
 const client = new Client(
-  {},
+  {
+    partials: ['MESSAGE']
+  },
   {
     token: process.env.TOKEN,
     prefix: process.env.PREFIX,
@@ -47,7 +49,8 @@ client.on("guildMemberAdd", async (member: GuildMember) => {
   }
 });
 
-client.on("message", (msg: mokaMessage) => {
+client.on("message", async (msg: mokaMessage) => {
+  if(msg.partial) await msg.fetch();
   if (msg.author.bot) return;
   if (spamchans.includes(msg.channel.id)) return;
   if (msg.member.hasPermission("ADMINISTRATOR") || client.isOwner(msg.author)) {
@@ -82,6 +85,11 @@ if (process.env.DEBUG == "true") {
 }
 client.on("messageDelete", async (msg: mokaMessage) => {
   if(!msg.guild) return;
+  if(msg.partial) {
+    try {
+      await msg.fetch(true);
+    } catch(e) {}
+  }
   const auditLogs = await msg.guild.fetchAuditLogs({
 		limit: 1,
 		type: 'MESSAGE_DELETE',
@@ -91,7 +99,7 @@ client.on("messageDelete", async (msg: mokaMessage) => {
   if(!chan) return;
   chan.send('', {
     embed: {
-      description: `**Un message de ${msg.author.username} dans ${msg.channel} a été supprimé**`,
+      description: `**Un message de ${msg.author} dans ${msg.channel} a été supprimé**`,
       color: 'RED',
       footer: {
         icon_url: `${msg.guild.iconURL({dynamic: true})}`,
@@ -104,7 +112,7 @@ client.on("messageDelete", async (msg: mokaMessage) => {
           value: `\`\`\`${msg.content} \`\`\``
         },
         {
-          name: 'Auteur',
+          name: 'Supprimé par',
           value: `\`\`\`${lg.executor.username ?? "Iconnu" }\`\`\``
         }
       ]
