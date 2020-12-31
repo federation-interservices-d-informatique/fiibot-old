@@ -42,6 +42,7 @@ client.on("guildMemberAdd", async (member: GuildMember) => {
     member.kick("RAIDMODE");
   }
 });
+
 client.on("message", (msg: mokaMessage) => {
   if (msg.author.bot) return;
   if (msg.member.hasPermission("ADMINISTRATOR")) {
