@@ -60,6 +60,7 @@ client.on("guildMemberAdd", async (member: GuildMember) => {
 client.on("message", async (msg: mokaMessage) => {
   if (msg.partial) await msg.fetch();
   if (msg.author.bot) return;
+  if(!msg.guild) return;
   const spamchans: Array<string> = msg.guild.settings.get('ignorespam') || new Array(); 
   if (spamchans.includes(msg.channel.id)) return;
   if (msg.member.hasPermission("ADMINISTRATOR") || client.isOwner(msg.author)) {
