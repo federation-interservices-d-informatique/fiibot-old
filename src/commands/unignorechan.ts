@@ -6,7 +6,8 @@ module.exports = class extends fiiCommand {
         super(client, {
             name: 'unignorechan',
             description: 'Arrêter d\'ignorer un salon',
-            userPermissions: ["ADMINISTRATOR"]
+            userPermissions: ["ADMINISTRATOR"],
+            guildOnly: true
         })
     }
     async run(message: mokaMessage) {
