@@ -6,6 +6,5 @@ export function chknum(num: string): string {
     while(n.length < 6) {
         n = `0${n}`
     }
-    console.log(n)
     return n;
 }
