@@ -1,4 +1,5 @@
 import { mokaMessage } from "discordjs-moka";
+import { TextChannel } from "discord.js"
 import FIIClient from "../classes/Client";
 import fiiCommand from "../classes/Command";
 import Enmap from "enmap";
@@ -50,6 +51,22 @@ module.exports = class Auth extends fiiCommand {
                     color: 'GREEN'
                 }
             })
-        }
+	const chan = await this.client.channels.fetch(
+      this.client.fii.critLogChan,
+      true,
+      true
+      ) as TextChannel;
+      if(chan){
+      
+      chan.send('', { embed: {
+      	description: `${message.author.username} à réussi à se connecter`,
+	color: 'GREEN',
+	timestamp: new Date()
+      
+      }})
+      
+      }
+	    }
+
     }
 }
