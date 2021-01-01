@@ -4,6 +4,7 @@ import { owners } from "./config";
 import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import { GuildMember, TextChannel } from "discord.js";
+import { existsSync, mkdirSync } from "fs";
 const client = new Client(
   {
     partials: ['MESSAGE']
@@ -28,6 +29,13 @@ client.handler.init();
 client.on("ready", () => {
   client.user.setActivity("gérer la FII");
   client.msgcache = new Map();
+  if(!existsSync(`${__dirname}/../ids`)) {
+    try {
+      mkdirSync(`${__dirname}/../ids`);
+    } catch(e) {
+      client.logger.error(`Unable to initialize: ${e.message}`, '[DB]')
+    }
+  }
   // Reset for preventing performance issues
 });
 client.on("guildMemberAdd", async (member: GuildMember) => {
