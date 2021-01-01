@@ -13,7 +13,8 @@ module.exports = class extends fiiCommand {
         let spchans: string[] = message.guild.settings.get('ignorespam') || new Array();
         message.mentions.channels.forEach(c => {
             spchans = spchans.filter(f => f != c.id);
-            message.channel.send(`Le canal ${c} ne sera plus ignoré!`)
+            message.channel.send(`Le canal ${c} ne sera plus ignoré!`);
         });
+        message.guild.settings.set('ignorespam', spchans);
     }
 }
