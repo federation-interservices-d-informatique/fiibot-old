@@ -12,6 +12,7 @@ module.exports = class extends (
       aliases: ["raid"],
       ownerOnly: true,
       usage: "raidmode",
+      guildOnly: true
     });
   }
   async run(message: mokaMessage) {

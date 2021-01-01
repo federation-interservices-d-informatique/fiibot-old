@@ -10,6 +10,7 @@ module.exports = class Report extends (
       name: "report",
       description: "Signaler un utilisateur",
       aliases: ["iléméchan"],
+      guildOnly: true
     });
   }
   async run(message: mokaMessage, args: string[]) {
