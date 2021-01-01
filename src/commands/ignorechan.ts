@@ -6,7 +6,9 @@ module.exports = class extends fiiCommand {
     constructor(client: FIIClient) {
         super(client, {
             name: 'ignorechan',
-            description: "Ignorer des canaux de l'antispam"
+            description: "Ignorer des canaux de l'antispam",
+            userPermissions: ["ADMINISTRATOR"],
+            guildOnly: true
         });
     }
     async run(message: mokaMessage) {

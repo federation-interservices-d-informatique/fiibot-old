@@ -11,6 +11,7 @@ module.exports = class extends (
       aliases: ["logchan"],
       clientPermissions: ["ADMINISTRATOR"],
       userPermissions: ["ADMINISTRATOR"],
+      guildOnly: true
     });
   }
   async run(message: mokaMessage, args: string[]) {
