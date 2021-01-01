@@ -34,6 +34,19 @@ module.exports = class IDCommand extends (
     });
 
     await idb.defer;
+    if (args[0] == "maxnum") {
+      message.channel.send(`Le nom d'utilisateur ${args[0]} est protégé! Car il s'agit d'une variable utilisée par le bot!`);
+      return;
+    }
+    if (idb.has(args[0])) {
+      message.channel.send("", {
+        embed: {
+          description: `Le nom d'utilisateur ${args[0]} existe déjà dans la base de données, veuillez en choisir un autre!`,
+          color: "RED",
+        },
+      });
+      return;
+    }
     const currentMax = parseInt(idb.get("maxnum")) || 1;
     idb.set("maxnum", currentMax + 1);
     /**
@@ -63,19 +76,6 @@ module.exports = class IDCommand extends (
     const rndBytes = promisify(randomBytes);
     const salt = await rndBytes(32);
     const hashID = await argon2i.hash(id, salt);
-    if (args[0] == "maxnum") {
-      message.channel.send(`Le nom d'utilisateur ${args[0]} est protégé! Car il s'agit d'une variable utilisée par le bot!`);
-      return;
-    }
-    if (idb.has(args[0])) {
-      message.channel.send("", {
-        embed: {
-          description: `Le nom d'utilisateur ${args[0]} existe déjà dans la base de données, veuillez en choisir un autre!`,
-          color: "RED",
-        },
-      });
-      return;
-    }
     idb.set(args[0], hashID);
     message.channel.send('ID enregistré!');
   }
