@@ -28,19 +28,26 @@ module.exports = class IDCommand extends (
       });
       return;
     }
-    const idb = new Enmap({
-      name: "ids",
-      dataDir: `${__dirname}/../../ids/`,
-    });
-
-    await idb.defer;
-    if (args[0] == "maxnum") {
+    /**
+     * Make sure a use hasn't 2usernames
+     */
+    const registred: string[] = this.client.idb.get('registredusers') || new Array();
+    if (registred.includes(message.author.id)) {
+      message.channel.send('', {
+        embed: {
+          description: `${message.author} Vous avez déjà un nom d'utilisateur! Si vous souhaitez l'avez oublié, veuillez contacter le C.A de la FII!`,
+          color: 'RANDOM'
+        }
+      });
+      return;
+    }
+    if (args[0] == "maxnum" || args[0] == "registredusers") {
       message.channel.send(
         `Le nom d'utilisateur ${args[0]} est protégé! Car il s'agit d'une variable utilisée par le bot!`
       );
       return;
     }
-    if (idb.has(args[0])) {
+    if (this.client.idb.has(args[0])) {
       message.channel.send("", {
         embed: {
           description: `Le nom d'utilisateur ${args[0]} existe déjà dans la base de données, veuillez en choisir un autre!`,
@@ -49,8 +56,11 @@ module.exports = class IDCommand extends (
       });
       return;
     }
-    const currentMax = parseInt(idb.get("maxnum")) || 1;
-    idb.set("maxnum", currentMax + 1);
+    /**
+     * Used to generate the number (not the random)
+     */
+    const currentMax = parseInt(this.client.idb.get("maxnum")) || 1;
+    this.client.idb.set("maxnum", currentMax + 1);
     /**
      * Sample ID:
      * FII-LPT-00005-8428605967-FII
@@ -66,7 +76,9 @@ module.exports = class IDCommand extends (
     message.author.send("", {
       embed: {
         title: "Votre ID FII",
-        description: `Bonjour ${message.author.username}, voici votre ID FII: \n\n\`\`\`${id}\`\`\`\n\nCelui-ci ne doit **pas** être partagé, même avec un membre du C.A de la FII. Il est conseillé de le conserver au chaud, il pourrait vous être utile pour vous identifier dans le futur.`,
+        description: `
+        Bonjour ${message.author.username}, voici votre ID FII: \n\n\`\`\`${id}\`\`\`\n\nCelui-ci ne doit **pas** être partagé, même avec un membre du C.A de la FII. Il est conseillé de le conserver au chaud, il pourrait vous être utile pour vous identifier dans le futur.
+        `,
         color: "RANDOM",
         footer: {
           icon_url: this.client.user.avatarURL(),
@@ -78,7 +90,12 @@ module.exports = class IDCommand extends (
     const rndBytes = promisify(randomBytes);
     const salt = await rndBytes(32);
     const hashID = await argon2i.hash(id, salt);
-    idb.set(args[0], hashID);
+    this.client.idb.set(args[0], hashID);
     message.channel.send("ID enregistré!");
+    /**
+     * Save the user id
+     */
+    registred.push(message.author.id);
+    this.client.idb.set("registredusers", registred);
   }
 };
