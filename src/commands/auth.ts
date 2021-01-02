@@ -2,7 +2,6 @@ import { mokaMessage } from "discordjs-moka";
 import { TextChannel } from "discord.js";
 import FIIClient from "../classes/Client";
 import fiiCommand from "../classes/Command";
-import Enmap from "enmap";
 import { argon2i } from "argon2-ffi";
 module.exports = class Auth extends (
   fiiCommand
@@ -24,21 +23,16 @@ module.exports = class Auth extends (
       );
       return;
     }
-    const idb = new Enmap({
-      name: "ids",
-      dataDir: `${__dirname}/../../ids/`,
-    });
-
-    await idb.defer;
-    if (!idb.has(args[0])) {
+    if (!this.client.idb.has(args[0])) {
       message.channel.send("", {
         embed: {
           description: `L'utilisateur ${args[0]} n'existe pas!`,
           color: "RED",
         },
       });
+      return;
     }
-    const hashedID = idb.get(args[0]);
+    const hashedID = this.client.idb.get(args[0]);
     const res = await argon2i.verify(hashedID, args[1]).catch((e) => {});
     if (!res) {
       message.channel.send("", {
@@ -52,7 +46,7 @@ module.exports = class Auth extends (
       message.channel.send("", {
         embed: {
           description:
-            "Authentification réussie!\nLe C.A de la FII a reçu cette information, vous êtes maintenant validé!",
+            "Authentification réussie!\nLe C.A de la FII a reçu cette information, vous êtes maintenant validé(e)!",
           color: "GREEN",
         },
       });
