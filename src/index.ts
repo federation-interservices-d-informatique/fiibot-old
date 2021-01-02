@@ -4,7 +4,6 @@ import { owners } from "./config";
 import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import { GuildMember, TextChannel } from "discord.js";
-import { existsSync, mkdirSync } from "fs";
 const client = new Client(
   {
     partials: ['MESSAGE']
@@ -29,12 +28,9 @@ client.handler.init();
 client.on("ready", () => {
   client.user.setActivity("gérer la FII");
   client.msgcache = new Map();
-  if(!existsSync(`${__dirname}/../ids`)) {
-    try {
-      mkdirSync(`${__dirname}/../ids`);
-    } catch(e) {
-      client.logger.error(`Unable to initialize: ${e.message}`, '[DB]')
-    }
+  if(client.user.id === "794861870825078815") {
+    client.fii.critLogChan = "794866866433556510" 
+    // FIIBot test server for FIIBOT beta
   }
   // Reset for preventing performance issues
 });
