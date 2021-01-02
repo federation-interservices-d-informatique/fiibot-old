@@ -3,7 +3,7 @@ envconfig();
 import { owners } from "./config";
 import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
-import { GuildMember, TextChannel, Util as DJSUtil } from "discord.js";
+import { GuildMember, TextChannel } from "discord.js";
 const client = new Client(
   {
     partials: ['MESSAGE']
