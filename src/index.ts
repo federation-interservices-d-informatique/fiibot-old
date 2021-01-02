@@ -274,7 +274,7 @@ client.on("roleUpdate", async (old: fiiRole, now: fiiRole) => {
   old.permissions != now.permissions
     ? fields.push({
         name: "Le role à changé de permissions!",
-        value: `Anciennes: \`\`\`${old.permissions.toArray()}\`\`\`\nNouvelles: \`\`\`${now.permissions.toArray()}\`\`\``,
+        value: `Anciennes:${old.permissions.toArray().length == 0 ? "Aucune" : old.permissions.toArray().map(p => `\`${p}\``).toString()}\nNouvelles: ${now.permissions.toArray().length == 0 ? "Aucune" : now.permissions.toArray().map(p => `\`${p}\``).toString()}`,
       })
     : "";
   chan
