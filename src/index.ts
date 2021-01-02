@@ -1,14 +1,20 @@
 import { config as envconfig } from "dotenv";
 envconfig();
 import { owners } from "./config";
-import { mokaHandler, mokaMessage } from "discordjs-moka";
+import { mokaGuild, mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
-import { GuildMember, Message, MessageEmbed, Role, TextChannel } from "discord.js";
+import {
+  GuildMember,
+  Message,
+  MessageEmbed,
+  Role,
+  TextChannel,
+} from "discord.js";
 import { fiiRole } from "./classes/Role";
 import { fiiGuildEmoji } from "./classes/GuildEmoji";
 const client = new Client(
   {
-    partials: ['MESSAGE']
+    partials: ["MESSAGE"],
   },
   {
     token: process.env.TOKEN,
@@ -30,8 +36,8 @@ client.handler.init();
 client.on("ready", () => {
   client.user.setActivity("gérer la FII");
   client.msgcache = new Map();
-  if(client.user.id === "794861870825078815") {
-    client.fii.critLogChan = "794866866433556510" 
+  if (client.user.id === "794861870825078815") {
+    client.fii.critLogChan = "794866866433556510";
     // FIIBot test server for FIIBOT beta
   }
   // Reset for preventing performance issues
@@ -58,8 +64,9 @@ client.on("guildMemberAdd", async (member: GuildMember) => {
 client.on("message", async (msg: mokaMessage) => {
   if (msg.partial) await msg.fetch();
   if (msg.author.bot) return;
-  if(!msg.guild) return;
-  const spamchans: Array<string> = msg.guild.settings.get('ignorespam') || new Array(); 
+  if (!msg.guild) return;
+  const spamchans: Array<string> =
+    msg.guild.settings.get("ignorespam") || new Array();
   if (spamchans.includes(msg.channel.id)) return;
   if (msg.member.hasPermission("ADMINISTRATOR") || client.isOwner(msg.author)) {
     return; // Ignore admins
@@ -87,187 +94,255 @@ client.on("message", async (msg: mokaMessage) => {
       } catch (e) {}
     });
   }
-  
 });
 if (process.env.DEBUG == "true") {
   client.on("debug", console.log);
 }
 client.on("messageDelete", async (msg: mokaMessage) => {
-  if(!msg.guild) return;
-  if(msg.partial) {
+  if (!msg.guild) return;
+  if (msg.partial) {
     try {
       await msg.fetch(true);
-    } catch(e) {}
+    } catch (e) {}
   }
-  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gmi
-  if(idregex.test(msg.content)) return; //Ignore IDS
-  if(msg.content.startsWith(`${client.moka.prefix}auth`)) return; // Don't log guild auths (prevent ID logging)
-  const chan = client.channels.resolve(msg.guild.settings.get('logchan')) as TextChannel;
-  if(!chan) return;
-  chan.send('', {
+  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gim;
+  if (idregex.test(msg.content)) return; //Ignore IDS
+  if (msg.content.startsWith(`${client.moka.prefix}auth`)) return; // Don't log guild auths (prevent ID logging)
+  const chan = client.channels.resolve(
+    msg.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  chan.send("", {
     embed: {
       description: `**Un message de ${msg.author} dans ${msg.channel} a été supprimé**`,
-      color: 'RED',
+      color: "RED",
       footer: {
-        icon_url: `${msg.guild.iconURL({dynamic: true})}`,
-        text: `Logs de ${msg.guild.name}`
+        icon_url: `${msg.guild.iconURL({ dynamic: true })}`,
+        text: `Logs de ${msg.guild.name}`,
       },
       timestamp: new Date(),
       fields: [
         {
-          name: 'Contenu',
-          value: `\`\`\`${msg.content} \`\`\``
-        }
-      ]
-    }
-  })
+          name: "Contenu",
+          value: `\`\`\`${msg.content} \`\`\``,
+        },
+      ],
+    },
+  });
 });
-client.on('messageUpdate', async (oldm: mokaMessage, newm: mokaMessage) => {
-
-  if(!newm.guild) return;
-  if(newm.partial) {
+client.on("messageUpdate", async (oldm: mokaMessage, newm: mokaMessage) => {
+  if (!newm.guild) return;
+  if (newm.partial) {
     try {
       await newm.fetch();
-    } catch(e) {}
+    } catch (e) {}
   }
-  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gmi
-  if(newm.content === oldm.content) return;
-  if(idregex.test(newm.content)) { 
-    newm.delete().catch(e => {})
+  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gim;
+  if (newm.content === oldm.content) return;
+  if (idregex.test(newm.content)) {
+    newm.delete().catch((e) => {});
     return;
-  };
-  if(idregex.test(newm.content) || idregex.test(oldm.content)) return; // Don't log ids
-  const chan = client.channels.resolve(newm.guild.settings.get('logchan')) as TextChannel;
-  if(!chan) return;
-  chan.send('', {
+  }
+  if (idregex.test(newm.content) || idregex.test(oldm.content)) return; // Don't log ids
+  const chan = client.channels.resolve(
+    newm.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  chan.send("", {
     embed: {
       description: `**Un message de ${newm.author} dans ${newm.channel} a été modifié**`,
-      color: 'RED',
+      color: "RED",
       footer: {
-        icon_url: `${newm.guild.iconURL({dynamic: true})}`,
-        text: `Logs de ${newm.guild.name}`
+        icon_url: `${newm.guild.iconURL({ dynamic: true })}`,
+        text: `Logs de ${newm.guild.name}`,
       },
       timestamp: new Date(),
       fields: [
         {
-          name: 'Nouveau contenu:',
-          value: `\`\`\`${newm.content} \`\`\``
+          name: "Nouveau contenu:",
+          value: `\`\`\`${newm.content} \`\`\``,
         },
         {
-          name: 'Ancien contenu:',
-          value: `\`\`\`${oldm.content}\`\`\``
-        }
-      ]
-    }
-  })
+          name: "Ancien contenu:",
+          value: `\`\`\`${oldm.content}\`\`\``,
+        },
+      ],
+    },
+  });
 });
-client.on('message', async (msg) => {
-  if(msg.partial) {
+client.on("message", async (msg) => {
+  if (msg.partial) {
     try {
       await msg.fetch();
-    } catch(e) {}
+    } catch (e) {}
   }
-  if(!msg.guild) return;
-  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gmi
-  if(idregex.test(msg.content)) {
-    let content = msg.content.replace(idregex, 'FII-SERVEUR-\\*\\*\\*\\*\\*\\*-\\*\\*\\*\\*\\*\\*\\*\\*\\*\\*-FII')
-    content = content.replace(/@(here|everyone)/gmi, '`MENTION INTERDITE`');
-    content = content.replace(/<@&[0-9]{18}>/gmi, '`Mention de rôle`');
-    msg.channel.send(content)
+  if (!msg.guild) return;
+  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gim;
+  if (idregex.test(msg.content)) {
+    let content = msg.content.replace(
+      idregex,
+      "FII-SERVEUR-\\*\\*\\*\\*\\*\\*-\\*\\*\\*\\*\\*\\*\\*\\*\\*\\*-FII"
+    );
+    content = content.replace(/@(here|everyone)/gim, "`MENTION INTERDITE`");
+    content = content.replace(/<@&[0-9]{18}>/gim, "`Mention de rôle`");
+    msg.channel.send(content);
     msg.delete();
   }
 });
-client.on('roleCreate', (role: fiiRole) => {
-  const chan = client.channels.resolve(role.guild.settings.get('logchan')) as TextChannel;
-  if(!chan) return;
-  chan.send('', {
+client.on("roleCreate", (role: fiiRole) => {
+  const chan = client.channels.resolve(
+    role.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  chan.send("", {
     embed: {
       title: `Un rôle a été créé!`,
       description: `Le role ${role.name} a été créé!`,
       fields: [
         {
           value: `\`\`\`${role.permissions.toArray()}\`\`\``,
-          name: 'Permissions:'
+          name: "Permissions:",
         },
       ],
       color: role.hexColor,
-      timestamp: new Date()
-    }
-  })
-});
-client.on('roleUpdate', async (old: fiiRole, now: fiiRole) => {
-  const chan = client.channels.resolve(now.guild.settings.get('logchan')) as TextChannel;
-  if(!chan) return;
-  
-  let fields = [];
-  old.name != now.name ? 
-  fields.push({ name: `Ancien nom:`, value: `\`${old.name}\`` }) : ""; 
-  old.mentionable != now.mentionable ?
-  fields.push({ name: `Le role ${old.mentionable ? "n'est plus mentionnable" : "est devenu mentionnable"}`, value: `** **`}) : ""
-  old.hexColor != now.hexColor ? 
-  fields.push({name: `Le role à changé de couleur!`, value: `Ancienne: \`${old.hexColor}\`\nNouvelle: \`${now.hexColor}\``}) : ""
-  old.permissions != now.permissions ? 
-  fields.push({name: 'Le role à changé de permissions!', value: `Anciennes: \`\`\`${old.permissions.toArray()}\`\`\`\nNouvelles: \`\`\`${now.permissions.toArray()}\`\`\``}) : ""
-  chan.send('', {
-    embed: {
-      title: 'Un role a été modifié!',
-      description: `Le role ${now.name} a été modifié!`,
-      color: now.hexColor,
       timestamp: new Date(),
-      fields: fields
-    }
-  }).catch(e => {});
+    },
+  });
 });
-client.on('roleDelete', (role: fiiRole) => {
-  const chan = client.channels.resolve(role.guild.settings.get('logchan')) as TextChannel;
-  if(!chan) return;
-  chan.send('', {
+client.on("roleUpdate", async (old: fiiRole, now: fiiRole) => {
+  const chan = client.channels.resolve(
+    now.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+
+  let fields = [];
+  old.name != now.name
+    ? fields.push({ name: `Ancien nom:`, value: `\`${old.name}\`` })
+    : "";
+  old.mentionable != now.mentionable
+    ? fields.push({
+        name: `Le role ${
+          old.mentionable
+            ? "n'est plus mentionnable"
+            : "est devenu mentionnable"
+        }`,
+        value: `** **`,
+      })
+    : "";
+  old.hexColor != now.hexColor
+    ? fields.push({
+        name: `Le role à changé de couleur!`,
+        value: `Ancienne: \`${old.hexColor}\`\nNouvelle: \`${now.hexColor}\``,
+      })
+    : "";
+  old.permissions != now.permissions
+    ? fields.push({
+        name: "Le role à changé de permissions!",
+        value: `Anciennes: \`\`\`${old.permissions.toArray()}\`\`\`\nNouvelles: \`\`\`${now.permissions.toArray()}\`\`\``,
+      })
+    : "";
+  chan
+    .send("", {
+      embed: {
+        title: "Un role a été modifié!",
+        description: `Le role ${now.name} a été modifié!`,
+        color: now.hexColor,
+        timestamp: new Date(),
+        fields: fields,
+      },
+    })
+    .catch((e) => {});
+});
+client.on("roleDelete", (role: fiiRole) => {
+  const chan = client.channels.resolve(
+    role.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  chan.send("", {
     embed: {
       title: `Un role a été supprimé`,
       timestamp: new Date(),
       description: `Le role ${role.name} a été supprimé.`,
       color: role.hexColor,
-    }
-  })
+    },
+  });
 });
-client.on('emojiCreate', (emj: fiiGuildEmoji) => {
-  const chan = client.channels.resolve(emj.guild.settings.get('logchan')) as TextChannel;
-  if(!chan) return;
-  chan.send('', {
+client.on("emojiCreate", (emj: fiiGuildEmoji) => {
+  const chan = client.channels.resolve(
+    emj.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  chan.send("", {
     embed: {
-      title: 'Un émoji a été créé!',
+      title: "Un émoji a été créé!",
       description: `L'émoji ${emj.name}(${emj.toString()}) a été créé!`,
-      color: 'RANDOM',
-      timestamp: new Date()
-    }
-  })
-});
-client.on('emojiUpdate', (old: fiiGuildEmoji, now: fiiGuildEmoji) => {
-  const chan = client.channels.resolve(now.guild.settings.get('logchan')) as TextChannel;
-  if(!chan) return;
-  let fields = [];
-  now.name != old.name ?
-  fields.push({ name: 'Ancien nom: ', value: `\`${old.name}\`` }) : "";
-  chan.send('', {
-    embed: {
-      title: 'Un émoji a été modifié!',
-      description: `L'émoji ${now.name}(${now}) a été modifié!`,
-      color: 'RANDOM',
+      color: "RANDOM",
       timestamp: new Date(),
-      fields: fields
-    }
-  }).catch(e => {});
+    },
+  });
 });
-client.on('emojiDelete', async (emj: fiiGuildEmoji) => {
-  const chan = client.channels.resolve(emj.guild.settings.get('logchan')) as TextChannel;
-  if(!chan) return;
-  chan.send('', {
+client.on("emojiUpdate", (old: fiiGuildEmoji, now: fiiGuildEmoji) => {
+  const chan = client.channels.resolve(
+    now.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  let fields = [];
+  now.name != old.name
+    ? fields.push({ name: "Ancien nom: ", value: `\`${old.name}\`` })
+    : "";
+  chan
+    .send("", {
+      embed: {
+        title: "Un émoji a été modifié!",
+        description: `L'émoji ${now.name}(${now}) a été modifié!`,
+        color: "RANDOM",
+        timestamp: new Date(),
+        fields: fields,
+      },
+    })
+    .catch((e) => {});
+});
+client.on("emojiDelete", async (emj: fiiGuildEmoji) => {
+  const chan = client.channels.resolve(
+    emj.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  chan.send("", {
     embed: {
       title: `Un émoji a été supprimé`,
       timestamp: new Date(),
       description: `L'émoji ${emj.name} a été supprimé.`,
-      color: 'RANDOM',
-    }
-  })
-
+      color: "RANDOM",
+    },
+  });
+});
+client.on("guildBanAdd", async (guild: mokaGuild, user) => {
+  const chan = client.channels.resolve(
+    guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  const log = await guild.fetchAuditLogs({
+    type: `MEMBER_BAN_ADD`,
+    limit: 1
+  });
+  const event = log.entries.first();
+  
+  chan.send("", {
+    embed: {
+      timestamp: new Date(),
+      title: "Un utilisateur a été banni!",
+      description: `L'utilisateur/trice ${user.tag}(${user.id}) a été banni(e)!`,
+      fields: [
+        {
+          value: `\`${event.executor.tag} (${event.executor.id})\``,
+          name: 'Bannir par:'
+        },
+        {
+          value: `\`${event.reason ?? "Aucune raison fournie"}\``,
+          name: `Raison:`
+        }
+      ],
+      color: 'RANDOM'
+    },
+  });
 });
