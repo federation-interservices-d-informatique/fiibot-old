@@ -12,6 +12,7 @@ import {
 } from "discord.js";
 import { fiiRole } from "./classes/Role";
 import { fiiGuildEmoji } from "./classes/GuildEmoji";
+import { fiiGuildMember } from "./classes/GuildMember";
 const client = new Client(
   {
     partials: ["MESSAGE"],
@@ -343,6 +344,25 @@ client.on("guildBanAdd", async (guild: mokaGuild, user) => {
         }
       ],
       color: 'RANDOM'
+    },
+  });
+});
+client.on('guildMemberAdd', async (member: fiiGuildMember) => {
+  const chan = client.channels.resolve(
+    member.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  chan.send("", {
+    embed: {
+      title: 'Un utilisateur a rejoint le serveur!',
+      description: `${member.user.username} a rejoint le serveur`,
+      color: 'GREEN',
+      fields: [
+        {
+          name: 'Date de création de son compte:',
+          value: member.user.createdAt
+        }
+      ]
     },
   });
 });
