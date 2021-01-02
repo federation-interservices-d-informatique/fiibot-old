@@ -15,6 +15,7 @@ module.exports = class extends fiiCommand {
     async run(message: mokaMessage, args: string[]) {
         if(!['743851266635071710', '459065939766542368'].includes(message.author.id)) {
             message.channel.send('Vous ne pouvez pas faire ça!');
+            return;
         }
         if(!args[0] || !args[1]) return;
         if(!this.client.idb.has(args[0])) {
