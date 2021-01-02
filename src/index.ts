@@ -258,3 +258,16 @@ client.on('emojiUpdate', (old: fiiGuildEmoji, now: fiiGuildEmoji) => {
     }
   }).catch(e => {});
 });
+client.on('emojiDelete', async (emj: fiiGuildEmoji) => {
+  const chan = client.channels.resolve(emj.guild.settings.get('logchan')) as TextChannel;
+  if(!chan) return;
+  chan.send('', {
+    embed: {
+      title: `Un émoji a été supprimé`,
+      timestamp: new Date(),
+      description: `L'émoji ${emj.name} a été supprimé.`,
+      color: 'RANDOM',
+    }
+  })
+
+});
