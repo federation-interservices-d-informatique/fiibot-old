@@ -27,7 +27,7 @@ module.exports = class Auth extends (
     if (!this.client.idb.has(args[0])) {
       message.channel.send("", {
         embed: {
-          description: `L'utilisateur ${args[0]} n'existe pas!`,
+          description: `Le nom d'utilisateur ${args[0]} n'existe pas!`,
           color: "RED",
         },
       });

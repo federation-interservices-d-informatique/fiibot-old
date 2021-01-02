@@ -8,7 +8,7 @@ module.exports = class Report extends (
   constructor(client: FIIClient) {
     super(client, {
       name: "report",
-      description: "Signaler un utilisateur",
+      description: "Signaler quelqu'un",
       aliases: ["iléméchan"],
       guildOnly: true
     });
@@ -33,6 +33,10 @@ module.exports = class Report extends (
     if (chan) {
       chan.send("", {
         embed: {
+          author: {
+            iconURL: user.avatarURL({format: 'png'}),
+            name: user.username
+          },
           title: `Report de ${user.username}`,
           fields: [
             {

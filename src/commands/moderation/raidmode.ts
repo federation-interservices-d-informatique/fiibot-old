@@ -35,7 +35,7 @@ module.exports = class extends (
           },
         });
       }
-      this.client.user.setActivity("gérer la FII");
+      this.client.user.setActivity(`gérer la FII | Préfixe: ${this.client.moka.prefix}`);
     } else {
       message.channel.send("", {
         embed: {
