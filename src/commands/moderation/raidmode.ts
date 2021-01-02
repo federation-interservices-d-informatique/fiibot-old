@@ -1,5 +1,5 @@
-import Client from "../classes/Client";
-import Command from "../classes/Command";
+import Client from "../../classes/Client";
+import Command from "../../classes/Command";
 import { mokaMessage } from "discordjs-moka";
 import { TextChannel } from "discord.js";
 module.exports = class extends (

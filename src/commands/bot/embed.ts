@@ -1,6 +1,6 @@
 import { mokaMessage } from "discordjs-moka";
-import FIIClient from "../classes/Client";
-import fiiCommand from "../classes/Command";
+import FIIClient from "../../classes/Client";
+import fiiCommand from "../../classes/Command";
 
 module.exports = class extends (
   fiiCommand

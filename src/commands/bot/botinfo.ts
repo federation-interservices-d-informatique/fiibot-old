@@ -1,5 +1,5 @@
-import FIIClient from "../classes/Client";
-import Command from "../classes/Command";
+import FIIClient from "../../classes/Client";
+import Command from "../../classes/Command";
 
 module.exports = class botinfo extends (
   Command
