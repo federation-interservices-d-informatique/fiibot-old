@@ -3,7 +3,8 @@ envconfig();
 import { owners } from "./config";
 import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
-import { GuildMember, TextChannel } from "discord.js";
+import { GuildMember, Message, MessageEmbed, Role, TextChannel } from "discord.js";
+import { fiiRole } from "./classes/Role";
 const client = new Client(
   {
     partials: ['MESSAGE']
@@ -174,4 +175,45 @@ client.on('message', async (msg) => {
     msg.channel.send(content)
     msg.delete();
   }
-})
+});
+client.on('roleCreate', (role: fiiRole) => {
+  const chan = client.channels.resolve(role.guild.settings.get('logchan')) as TextChannel;
+  if(!chan) return;
+  chan.send('', {
+    embed: {
+      title: `Un rôle a été créé!`,
+      description: `Le role ${role.name} a été créé!`,
+      fields: [
+        {
+          value: `\`\`\`${role.permissions.toArray()}\`\`\``,
+          name: 'Permissions:'
+        },
+      ],
+      color: role.hexColor,
+      timestamp: new Date()
+    }
+  })
+});
+client.on('roleUpdate', async (old: fiiRole, now: fiiRole) => {
+  const chan = client.channels.resolve(now.guild.settings.get('logchan')) as TextChannel;
+  if(!chan) return;
+  
+  let fields = [];
+  old.name != now.name ? 
+  fields.push({ name: `Ancien nom:`, value: `\`${old.name}\`` }) : ""; 
+  old.mentionable != now.mentionable ?
+  fields.push({ name: `Le role ${old.mentionable ? "n'est plus mentionnable" : "est devenu mentionnable"}`, value: `** **`}) : ""
+  old.hexColor != now.hexColor ? 
+  fields.push({name: `Le role à changé de couleur!`, value: `Ancienne: \`${old.hexColor}\`\nNouvelle: \`${now.hexColor}\``}) : ""
+  old.permissions != now.permissions ? 
+  fields.push({name: 'Le role à changé de permissions!', value: `Anciennes: \`\`\`${old.permissions.toArray()}\`\`\`\nNouvelles: \`\`\`${now.permissions.toArray()}\`\`\``}) : ""
+  chan.send('', {
+    embed: {
+      title: 'Un role a été modifié!',
+      description: `Le role ${now.name} a été modifié!`,
+      color: now.hexColor,
+      timestamp: new Date(),
+      fields: fields
+    }
+  }).catch(e => {});
+});
