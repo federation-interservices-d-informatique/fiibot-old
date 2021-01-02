@@ -140,6 +140,7 @@ client.on("messageDelete", async (msg: mokaMessage) => {
       return
     }
   }
+  if(msg.author.id == client.user.id) return
   const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gim;
   if (idregex.test(msg.content)) return; //Ignore IDS
   if (msg.content.startsWith(`${client.moka.prefix}auth`)) return; // Don't log guild auths (prevent ID logging)
