@@ -5,9 +5,6 @@ import { mokaGuild, mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import {
   GuildMember,
-  Message,
-  MessageEmbed,
-  Role,
   TextChannel,
 } from "discord.js";
 import { fiiRole } from "./classes/Role";
@@ -35,7 +32,7 @@ client.setHandler(
 );
 client.handler.init();
 client.on("ready", () => {
-  client.user.setActivity("gérer la FII");
+  client.user.setActivity(`gérer la FII | Prefixé: ${client.moka.prefix}`);
   client.msgcache = new Map();
   if (client.user.id === "794861870825078815") {
     client.fii.critLogChan = "794866866433556510";
@@ -331,7 +328,7 @@ client.on("guildBanAdd", async (guild: mokaGuild, user) => {
   chan.send("", {
     embed: {
       timestamp: new Date(),
-      title: "Un utilisateur a été banni!",
+      title: "Un(e) utilisateur/trice a été banni(e)!",
       description: `L'utilisateur/trice ${user.tag}(${user.id}) a été banni(e)!`,
       fields: [
         {
@@ -354,7 +351,7 @@ client.on('guildMemberAdd', async (member: fiiGuildMember) => {
   if (!chan) return;
   chan.send("", {
     embed: {
-      title: 'Un utilisateur a rejoint le serveur!',
+      title: 'Un(e) utilisateur/trice a rejoint le serveur!',
       description: `${member.user.username} a rejoint le serveur`,
       color: 'GREEN',
       fields: [
