@@ -5,6 +5,7 @@ import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import { GuildMember, Message, MessageEmbed, Role, TextChannel } from "discord.js";
 import { fiiRole } from "./classes/Role";
+import { fiiGuildEmoji } from "./classes/GuildEmoji";
 const client = new Client(
   {
     partials: ['MESSAGE']
@@ -226,6 +227,18 @@ client.on('roleDelete', (role: fiiRole) => {
       timestamp: new Date(),
       description: `Le role ${role.name} a été supprimé.`,
       color: role.hexColor,
+    }
+  })
+});
+client.on('emojiCreate', (emj: fiiGuildEmoji) => {
+  const chan = client.channels.resolve(emj.guild.settings.get('logchan')) as TextChannel;
+  if(!chan) return;
+  chan.send('', {
+    embed: {
+      title: 'Un émoji a été créé!',
+      description: `L'émoji ${emj.name}(${emj.toString()}) a été créé!`,
+      color: 'RANDOM',
+      timestamp: new Date()
     }
   })
 });
