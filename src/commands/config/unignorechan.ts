@@ -1,5 +1,5 @@
 import { mokaClient, mokaMessage } from "discordjs-moka";
-import fiiCommand from "../classes/Command";
+import fiiCommand from "../../classes/Command";
 
 module.exports = class extends fiiCommand {
     constructor(client: mokaClient) {
@@ -7,7 +7,8 @@ module.exports = class extends fiiCommand {
             name: 'unignorechan',
             description: 'Arrêter d\'ignorer un salon',
             userPermissions: ["ADMINISTRATOR"],
-            guildOnly: true
+            guildOnly: true,
+            aliases: ['stopignore']
         })
     }
     async run(message: mokaMessage) {

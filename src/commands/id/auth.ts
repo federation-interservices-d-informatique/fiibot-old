@@ -1,7 +1,7 @@
 import { mokaMessage } from "discordjs-moka";
 import { TextChannel } from "discord.js";
-import FIIClient from "../classes/Client";
-import fiiCommand from "../classes/Command";
+import FIIClient from "../../classes/Client";
+import fiiCommand from "../../classes/Command";
 import { argon2i } from "argon2-ffi";
 module.exports = class Auth extends (
   fiiCommand
