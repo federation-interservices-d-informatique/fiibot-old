@@ -5,7 +5,6 @@ import { mokaGuild, mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import {
   GuildMember,
-  MessageEmbed,
   TextChannel,
 } from "discord.js";
 import { fiiRole } from "./classes/Role";
