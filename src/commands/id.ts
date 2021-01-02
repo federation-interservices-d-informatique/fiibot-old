@@ -35,7 +35,9 @@ module.exports = class IDCommand extends (
 
     await idb.defer;
     if (args[0] == "maxnum") {
-      message.channel.send(`Le nom d'utilisateur ${args[0]} est protégé! Car il s'agit d'une variable utilisée par le bot!`);
+      message.channel.send(
+        `Le nom d'utilisateur ${args[0]} est protégé! Car il s'agit d'une variable utilisée par le bot!`
+      );
       return;
     }
     if (idb.has(args[0])) {
@@ -77,6 +79,6 @@ module.exports = class IDCommand extends (
     const salt = await rndBytes(32);
     const hashID = await argon2i.hash(id, salt);
     idb.set(args[0], hashID);
-    message.channel.send('ID enregistré!');
+    message.channel.send("ID enregistré!");
   }
 };
