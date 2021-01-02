@@ -3,7 +3,7 @@ envconfig();
 import { owners } from "./config";
 import { mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
-import { GuildMember, TextChannel } from "discord.js";
+import { GuildMember, TextChannel, Util as DJSUtil } from "discord.js";
 const client = new Client(
   {
     partials: ['MESSAGE']
@@ -97,6 +97,8 @@ client.on("messageDelete", async (msg: mokaMessage) => {
       await msg.fetch(true);
     } catch(e) {}
   }
+  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gmi
+  if(idregex.test(msg.content)) return; //Ignore IDS
   if(msg.content.startsWith(`${client.moka.prefix}auth`)) return; // Don't log guild auths (prevent ID logging)
   const chan = client.channels.resolve(msg.guild.settings.get('logchan')) as TextChannel;
   if(!chan) return;
@@ -126,7 +128,13 @@ client.on('messageUpdate', async (oldm: mokaMessage, newm: mokaMessage) => {
       await newm.fetch();
     } catch(e) {}
   }
+  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gmi
   if(newm.content === oldm.content) return;
+  if(idregex.test(newm.content)) { 
+    newm.delete().catch(e => {})
+    return;
+  };
+  if(idregex.test(newm.content) || idregex.test(oldm.content)) return; // Don't log ids
   const chan = client.channels.resolve(newm.guild.settings.get('logchan')) as TextChannel;
   if(!chan) return;
   chan.send('', {
@@ -151,3 +159,19 @@ client.on('messageUpdate', async (oldm: mokaMessage, newm: mokaMessage) => {
     }
   })
 });
+client.on('message', async (msg) => {
+  if(msg.partial) {
+    try {
+      await msg.fetch();
+    } catch(e) {}
+  }
+  if(!msg.guild) return;
+  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gmi
+  if(idregex.test(msg.content)) {
+    let content = msg.content.replace(idregex, 'FII-SERVEUR-\\*\\*\\*\\*\\*\\*-\\*\\*\\*\\*\\*\\*\\*\\*\\*\\*-FII')
+    content = content.replace(/@(here|everyone)/gmi, '`MENTION INTERDITE`');
+    content = content.replace(/<@&[0-9]{18}>/gmi, '`Mention de rôle`');
+    msg.channel.send(content)
+    msg.delete();
+  }
+})
