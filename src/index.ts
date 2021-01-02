@@ -242,3 +242,19 @@ client.on('emojiCreate', (emj: fiiGuildEmoji) => {
     }
   })
 });
+client.on('emojiUpdate', (old: fiiGuildEmoji, now: fiiGuildEmoji) => {
+  const chan = client.channels.resolve(now.guild.settings.get('logchan')) as TextChannel;
+  if(!chan) return;
+  let fields = [];
+  now.name != old.name ?
+  fields.push({ name: 'Ancien nom: ', value: `\`${old.name}\`` }) : "";
+  chan.send('', {
+    embed: {
+      title: 'Un émoji a été modifié!',
+      description: `L'émoji ${now.name}(${now}) a été modifié!`,
+      color: 'RANDOM',
+      timestamp: new Date(),
+      fields: fields
+    }
+  }).catch(e => {});
+});
