@@ -21,6 +21,7 @@ module.exports = class Auth extends (
       message.channel.send(
         "Cette commande ne peut que être exécutée en message privés!"
       );
+      message.delete(); // Supress ID
       return;
     }
     if (!this.client.idb.has(args[0])) {
@@ -58,7 +59,7 @@ module.exports = class Auth extends (
       if (chan) {
         chan.send("", {
           embed: {
-            description: `${message.author.username} à réussi à se connecter`,
+            description: `${message.author.username} à réussi à se connecter avec le nom d'utilisateur ${args[0]}`,
             color: "GREEN",
             timestamp: new Date(),
           },
