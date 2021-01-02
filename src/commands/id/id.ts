@@ -1,7 +1,6 @@
 import { mokaMessage } from "discordjs-moka";
 import FIIClient from "../../classes/Client";
 import fiiCommand from "../../classes/Command";
-import Enmap from "enmap";
 import { servers } from "../../config";
 import { chknum } from "../../Util/numbers";
 import { argon2i } from "argon2-ffi";
@@ -26,6 +25,10 @@ module.exports = class IDCommand extends (
           color: "RED",
         },
       });
+      return;
+    }
+    if(args.length > 1) {
+      message.channel.send('Les noms d\'utilisateurs ne doivent pas contenir d\'espaces!');
       return;
     }
     /**
