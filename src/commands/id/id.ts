@@ -44,6 +44,10 @@ module.exports = class IDCommand extends (
       });
       return;
     }
+    if(!/[0-Z]{1,}/gmi.test(args[0])) {
+      message.channel.send('Le nom d\'utilisateur ne doit que contenir des lettres et des chiffres!')
+      return;
+    }
     if (args[0] == "maxnum" || args[0] == "registredusers") {
       message.channel.send(
         `Le nom d'utilisateur ${args[0]} est protégé! Car il s'agit d'une variable utilisée par le bot!`
