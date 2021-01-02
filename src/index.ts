@@ -217,3 +217,15 @@ client.on('roleUpdate', async (old: fiiRole, now: fiiRole) => {
     }
   }).catch(e => {});
 });
+client.on('roleDelete', (role: fiiRole) => {
+  const chan = client.channels.resolve(role.guild.settings.get('logchan')) as TextChannel;
+  if(!chan) return;
+  chan.send('', {
+    embed: {
+      title: `Un role a été supprimé`,
+      timestamp: new Date(),
+      description: `Le role ${role.name} a été supprimé.`,
+      color: role.hexColor,
+    }
+  })
+});
