@@ -1,9 +1,9 @@
 import { mokaMessage } from "discordjs-moka";
-import FIIClient from "../classes/Client";
-import fiiCommand from "../classes/Command";
+import FIIClient from "../../classes/Client";
+import fiiCommand from "../../classes/Command";
 import Enmap from "enmap";
-import { servers } from "../config";
-import { chknum } from "../Util/numbers";
+import { servers } from "../../config";
+import { chknum } from "../../Util/numbers";
 import { argon2i } from "argon2-ffi";
 import { promisify } from "util";
 import { randomBytes } from "crypto";
