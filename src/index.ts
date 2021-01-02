@@ -103,7 +103,8 @@ client.on('message', async (msg: mokaMessage) => {
   }
   if(!msg.guild) return;
   if(msg.guild.settings.get('autoriseinvites')) return;
-  if(msg.guild.settings.get('autorisedinviteschans').includes(msg.channel.id)) return;
+  const autoris = msg.guild.settings.get('autorisedinviteschans') || new Array();
+  if(autoris.includes(msg.channel.id)) return;
   if(msg.member.hasPermission('ADMINISTRATOR')) return;
   if(client.isOwner(msg.author)) return;
   const inviteregex = /(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/[0-Z]{1,20}/gim
