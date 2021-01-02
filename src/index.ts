@@ -94,6 +94,13 @@ client.on("message", async (msg: mokaMessage) => {
   }
 });
 client.on('message', async (msg: mokaMessage) => {
+  if(msg.partial) {
+    try {
+      await msg.fetch()
+    } catch(e) {
+      return;
+    }
+  }
   if(!msg.guild) return;
   if(msg.guild.settings.get('autoriseinvites')) return;
   if(msg.guild.settings.get('autorisedinviteschans').includes(msg.channel.id)) return;
@@ -101,6 +108,8 @@ client.on('message', async (msg: mokaMessage) => {
   if(client.isOwner(msg.author)) return;
   const inviteregex = /(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/[0-Z]{1,20}/gim
   if(inviteregex.test(msg.content)) {
+    const autoriseRegex = /(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/(yHhkjZhzBX|BKRuPP2|wNcrRpD|sXEH7cB|8KDQzwP)/gim
+    if(autoriseRegex.test(msg.content)) return // Skip FII invites
     let content = msg.content.replace(/(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/[0-Z]{1,20}/gim, '{Invitation censurée}');
     content = content.replace(/@(here|everyone)/gim, "`MENTION INTERDITE`");
     content = content.replace(/<@&[0-9]{18}>/gim, "`Mention de rôle`");
@@ -126,7 +135,9 @@ client.on("messageDelete", async (msg: mokaMessage) => {
   if (msg.partial) {
     try {
       await msg.fetch(true);
-    } catch (e) {}
+    } catch (e) {
+      return
+    }
   }
   const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gim;
   if (idregex.test(msg.content)) return; //Ignore IDS
