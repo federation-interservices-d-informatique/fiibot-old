@@ -97,7 +97,7 @@ client.on("messageDelete", async (msg: mokaMessage) => {
       await msg.fetch(true);
     } catch(e) {}
   }
-  
+  if(msg.content.startsWith(`${client.moka.prefix}auth`)) return; // Don't log guild auths (prevent ID logging)
   const chan = client.channels.resolve(msg.guild.settings.get('logchan')) as TextChannel;
   if(!chan) return;
   chan.send('', {
