@@ -5,6 +5,7 @@ import { mokaGuild, mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import {
   GuildMember,
+  MessageEmbed,
   TextChannel,
 } from "discord.js";
 import { fiiRole } from "./classes/Role";
@@ -91,6 +92,31 @@ client.on("message", async (msg: mokaMessage) => {
         if (!m.deleted) m.delete();
       } catch (e) {}
     });
+  }
+});
+client.on('message', async (msg: mokaMessage) => {
+  if(!msg.guild) return;
+  if(msg.guild.settings.get('autoriseinvites')) return;
+  if(msg.guild.settings.get('autorisedinviteschans').includes(msg.channel.id)) return;
+  if(msg.member.hasPermission('ADMINISTRATOR')) return;
+  if(client.isOwner(msg.author)) return;
+  const inviteregex = /(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/[0-Z]{1,20}/gim
+  if(inviteregex.test(msg.content)) {
+    let content = msg.content.replace(/(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/[0-Z]{1,20}/gim, '{Invitation censurée}');
+    content = content.replace(/@(here|everyone)/gim, "`MENTION INTERDITE`");
+    content = content.replace(/<@&[0-9]{18}>/gim, "`Mention de rôle`");
+    if(!msg.deleted) msg.delete();
+    if(msg.channel.type === 'text') {
+      const hooks = await msg.channel.fetchWebhooks();
+      let hook = hooks.first();
+      if(!hook) {
+        hook = await msg.channel.createWebhook('FIIBOT');
+      }
+      hook.send(content, {
+        username: msg.author.username,
+        avatarURL: msg.author.avatarURL()
+      })
+    }
   }
 });
 if (process.env.DEBUG == "true") {
