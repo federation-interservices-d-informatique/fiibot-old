@@ -13,7 +13,8 @@ if [[ "ps -ef | grep -i ${NAME} | grep -v grep" ]]; then
 fi
 PSUM="$(sha256sum package.json)"
 if [[ -d ".git" ]]; then
-	git pull
+	rm -rf package-lock.log # Cause some conflicts
+    git pull
 fi
 if [[ "${PSUM}" != "$(sha256sum package.json)"  ]]; then
 	rm -rf "./node_modules"
