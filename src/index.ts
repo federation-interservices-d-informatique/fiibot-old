@@ -361,8 +361,42 @@ client.on('guildMemberAdd', async (member: fiiGuildMember) => {
         {
           name: 'Date de création de son compte:',
           value: member.user.createdAt
+        },
+        {
+          name: 'ID',
+          value: member.user.id
         }
-      ]
+      ],
+      author: {
+        iconURL: member.user.avatarURL(),
+        name: member.user.username
+      },
     },
   });
+});
+client.on('guildMemberRemove', (m: fiiGuildMember) => {
+  const chan = client.channels.resolve(
+    m.guild.settings.get("logchan")
+  ) as TextChannel;
+  if (!chan) return;
+  chan.send('', {
+    embed: {
+      title: `Ohh... ${m.user.username} vient de quitter le serveur...`,
+      color: 'RED',
+      author: {
+        iconURL: m.user.avatarURL(),
+        name: m.user.username
+      },
+      fields: [
+        {
+          name: 'Création du compte',
+          value: m.user.createdAt
+        },
+        {
+          name: 'ID',
+          value: m.user.id
+        }
+      ]
+    }
+  })
 });
