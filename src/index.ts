@@ -32,7 +32,7 @@ client.setHandler(
 );
 client.handler.init();
 client.on("ready", () => {
-  client.user.setActivity(`gérer la FII | Prefixé: ${client.moka.prefix}`);
+  client.user.setActivity(`gérer la FII | Prefixe: ${client.moka.prefix}`);
   client.msgcache = new Map();
   if (client.user.id === "794861870825078815") {
     client.fii.critLogChan = "794866866433556510";
