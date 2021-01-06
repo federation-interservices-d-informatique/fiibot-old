@@ -16,6 +16,6 @@ export default class FIIClient extends mokaClient {
       owners: fiiOpts.owners ?? fiiOpts.owners,
       critLogChan: fiiOpts.critLogChan    
     };
-    this.idb = new Keyv(`postgresql://${process.env.IDB_USER}:${process.env.IDB_PASSWD}@${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? 5432}/${process.env.IDB_NAME}`)
+    this.idb = new Keyv(`postgresql://${process.env.IDB_USER}:${process.env.IDB_PASSWD}@${process.env.DB_HOST ?? 'localhost'}/${process.env.IDB_NAME}`)
   }
 }
