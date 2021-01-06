@@ -1,26 +1,33 @@
 #!/usr/bin/env bash
-function Install-NodeModules {
-    npm install 
-    if [[ $? != 0 ]]; then
-        echo "Erreur lors de l'installation des modules!"
-        exit 1    
-    fi
-}
+APP="fiibot"
+if [[ ! $(command -v "git") ]]
+then
+    echo -e "\e[91mYou need to install git!"
+    exit 1 
+fi
+if [[ ! $(command -v "docker") ]]
+then
+    echo -e "\e[91mYou need to install docker!"
+    exit 1
+fi
+if [[ ! $(command -v "docker-compose") ]]
+then
+    echo -e "\e[91mYou need to install docker-compose!"
+    exit 1
+fi
+git submodule update --init --recursive --force --remote || exit 1;
+echo -e "\e[96mBuilding ${APP}..."
+echo ""
+SUDO="sudo" 
+if [[ $(command -v "doas") ]]
+then 
+    SUDO="doas" 
+fi
+if [[ ! $(command -v "${SUDO}") && $UID != "0" ]]; then
+    echo -e "\e[91mYou need to install sudo for building!"
+fi
+$SUDO docker-compose build
 
-NAME="fiibot"
-if [[ "ps -ef | grep -i ${NAME} | grep -v grep" ]]; then
-    pm2 stop "${NAME}"
-fi
-PSUM="$(sha256sum package.json)"
-if [[ -d ".git" ]]; then
-	rm -rf package-lock.log # Cause some conflicts
-    git pull
-fi
-if [[ "${PSUM}" != "$(sha256sum package.json)"  ]]; then
-	rm -rf "./node_modules"
-fi
-if [[ ! -d "./node_modules" ]]; then
-    Install-NodeModules
-fi
-npx tsc
-pm2 start --name "${NAME}" --log "${NAME}.log" dist/index.js
+echo -e "\e[96mStarting ${APP}..."
+echo ""
+docker-compose up -d
