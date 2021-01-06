@@ -18,7 +18,7 @@ module.exports = class extends (
     if (!args[0]) {
       message.channel.send("", {
         embed: {
-          description: `Le salon de logs est actuellement <#${message.guild.settings.get(
+          description: `Le salon de logs est actuellement <#${await message.guild.settings.get(
             "logchan"
           )}>`,
           color: "RANDOM",
@@ -38,7 +38,7 @@ module.exports = class extends (
       });
       return;
     }
-    message.guild.settings.set("logchan", chan.id);
+    await message.guild.settings.set("logchan", chan.id);
     message.channel.send("", {
       embed: {
         description: `Le salon ${chan} a bien été défini comme salon de logs.`,

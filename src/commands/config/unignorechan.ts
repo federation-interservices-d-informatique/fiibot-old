@@ -12,11 +12,11 @@ module.exports = class extends fiiCommand {
         })
     }
     async run(message: mokaMessage) {
-        let spchans: string[] = message.guild.settings.get('ignorespam') || new Array();
+        let spchans: string[] = await message.guild.settings.get('ignorespam') || new Array();
         message.mentions.channels.forEach(c => {
             spchans = spchans.filter(f => f != c.id);
             message.channel.send(`Le canal ${c} ne sera plus ignoré!`);
         });
-        message.guild.settings.set('ignorespam', spchans);
+        await message.guild.settings.set('ignorespam', spchans);
     }
 }

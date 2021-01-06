@@ -12,13 +12,13 @@ module.exports = class extends fiiCommand {
         });
     }
     async run(message: mokaMessage) {
-        let currentchans: Array<string> = message.guild.settings.get('ignorespam') || new Array();
+        let currentchans: Array<string> = await message.guild.settings.get('ignorespam') || new Array();
         message.mentions.channels.forEach(m => {
             if(!currentchans.includes(m.id.toString())) {
                 currentchans.push(m.id.toString());
             }
         });
-        message.guild.settings.set('ignorespam', currentchans);
+        await message.guild.settings.set('ignorespam', currentchans);
         message.channel.send('', { embed: {
             description: `Canal ajouté!`,
             color: 'GREEN'
