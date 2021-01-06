@@ -10,7 +10,7 @@
     "argon2-ffi": "^2.0.0",
     "bufferutil": "^4.0.3",
     "discord.js": "^12.5.1",
-    "discordjs-moka": "^3.0.8",
+    "discordjs-moka": "^3.0.9",
     "dotenv": "^8.2.0",
     "enmap": "^5.8.2",
     "erlpack": "^0.1.3",

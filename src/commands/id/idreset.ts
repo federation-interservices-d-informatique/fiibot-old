@@ -29,6 +29,6 @@ module.exports = class extends fiiCommand {
         users = users.filter((u) => {
             u != args[1]
         });
-        this.client.idb.set('registredusers', users);
+        await this.client.idb.set('registredusers', users);
     }
 }

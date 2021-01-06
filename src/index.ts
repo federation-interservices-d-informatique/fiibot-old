@@ -18,6 +18,7 @@ const client = new Client(
     token: process.env.TOKEN,
     prefix: process.env.PREFIX,
     owner: owners,
+    dburl: `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWD}@${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? 5432}/${process.env.DB_NAME}`
   },
   {
     owners: owners,
@@ -64,7 +65,7 @@ client.on("message", async (msg: mokaMessage) => {
   if (msg.author.bot) return;
   if (!msg.guild) return;
   const spamchans: Array<string> =
-    msg.guild.settings.get("ignorespam") || new Array();
+    await msg.guild.settings.get("ignorespam") || new Array();
   if (spamchans.includes(msg.channel.id)) return;
   if (msg.member.hasPermission("ADMINISTRATOR") || client.isOwner(msg.author)) {
     return; // Ignore admins
@@ -103,7 +104,7 @@ client.on('message', async (msg: mokaMessage) => {
   }
   if(!msg.guild) return;
   if(msg.guild.settings.get('autoriseinvites')) return;
-  const autoris = msg.guild.settings.get('autorisedinviteschans') || new Array();
+  const autoris: Array<string> = await msg.guild.settings.get('autorisedinviteschans')  || new Array();
   if(autoris.includes(msg.channel.id)) return;
   if(msg.member.hasPermission('ADMINISTRATOR')) return;
   if(client.isOwner(msg.author)) return;
@@ -145,7 +146,7 @@ client.on("messageDelete", async (msg: mokaMessage) => {
   if (idregex.test(msg.content)) return; //Ignore IDS
   if (msg.content.startsWith(`${client.moka.prefix}auth`)) return; // Don't log guild auths (prevent ID logging)
   const chan = client.channels.resolve(
-    msg.guild.settings.get("logchan")
+    await msg.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   chan.send("", {
@@ -181,7 +182,7 @@ client.on("messageUpdate", async (oldm: mokaMessage, newm: mokaMessage) => {
   }
   if (idregex.test(newm.content) || idregex.test(oldm.content)) return; // Don't log ids
   const chan = client.channels.resolve(
-    newm.guild.settings.get("logchan")
+    await newm.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   chan.send("", {
@@ -225,9 +226,9 @@ client.on("message", async (msg) => {
     msg.delete();
   }
 });
-client.on("roleCreate", (role: fiiRole) => {
+client.on("roleCreate", async (role: fiiRole) => {
   const chan = client.channels.resolve(
-    role.guild.settings.get("logchan")
+    await role.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   chan.send("", {
@@ -247,7 +248,7 @@ client.on("roleCreate", (role: fiiRole) => {
 });
 client.on("roleUpdate", async (old: fiiRole, now: fiiRole) => {
   const chan = client.channels.resolve(
-    now.guild.settings.get("logchan")
+    await now.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
 
@@ -289,9 +290,9 @@ client.on("roleUpdate", async (old: fiiRole, now: fiiRole) => {
     })
     .catch((e) => {});
 });
-client.on("roleDelete", (role: fiiRole) => {
+client.on("roleDelete", async (role: fiiRole) => {
   const chan = client.channels.resolve(
-    role.guild.settings.get("logchan")
+    await role.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   chan.send("", {
@@ -303,9 +304,9 @@ client.on("roleDelete", (role: fiiRole) => {
     },
   });
 });
-client.on("emojiCreate", (emj: fiiGuildEmoji) => {
+client.on("emojiCreate", async (emj: fiiGuildEmoji) => {
   const chan = client.channels.resolve(
-    emj.guild.settings.get("logchan")
+    await emj.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   chan.send("", {
@@ -317,9 +318,9 @@ client.on("emojiCreate", (emj: fiiGuildEmoji) => {
     },
   });
 });
-client.on("emojiUpdate", (old: fiiGuildEmoji, now: fiiGuildEmoji) => {
+client.on("emojiUpdate", async (old: fiiGuildEmoji, now: fiiGuildEmoji) => {
   const chan = client.channels.resolve(
-    now.guild.settings.get("logchan")
+    await now.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   let fields = [];
@@ -340,7 +341,7 @@ client.on("emojiUpdate", (old: fiiGuildEmoji, now: fiiGuildEmoji) => {
 });
 client.on("emojiDelete", async (emj: fiiGuildEmoji) => {
   const chan = client.channels.resolve(
-    emj.guild.settings.get("logchan")
+    await emj.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   chan.send("", {
@@ -354,7 +355,7 @@ client.on("emojiDelete", async (emj: fiiGuildEmoji) => {
 });
 client.on("guildBanAdd", async (guild: mokaGuild, user) => {
   const chan = client.channels.resolve(
-    guild.settings.get("logchan")
+    await guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   const log = await guild.fetchAuditLogs({
@@ -384,7 +385,7 @@ client.on("guildBanAdd", async (guild: mokaGuild, user) => {
 });
 client.on('guildMemberAdd', async (member: fiiGuildMember) => {
   const chan = client.channels.resolve(
-    member.guild.settings.get("logchan")
+    await member.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   chan.send("", {
@@ -409,9 +410,9 @@ client.on('guildMemberAdd', async (member: fiiGuildMember) => {
     },
   });
 });
-client.on('guildMemberRemove', (m: fiiGuildMember) => {
+client.on('guildMemberRemove', async (m: fiiGuildMember) => {
   const chan = client.channels.resolve(
-    m.guild.settings.get("logchan")
+    await m.guild.settings.get("logchan")
   ) as TextChannel;
   if (!chan) return;
   chan.send('', {
