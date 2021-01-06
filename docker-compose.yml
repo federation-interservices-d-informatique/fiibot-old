@@ -10,7 +10,7 @@ services:
     volumes:
       - "./compose-multi-db:/docker-entrypoint-initdb.d"
       - "./data:/var/lib/postgresql/data/"
-      - "./node_modules:/app/bot/node_modules"
+      - "./:/app/bot"
     networks:
       - bot
   bot:
