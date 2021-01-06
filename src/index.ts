@@ -18,7 +18,7 @@ const client = new Client(
     token: process.env.TOKEN,
     prefix: process.env.PREFIX,
     owner: owners,
-    dburl: `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWD}@${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? 5432}/${process.env.DB_NAME}`
+    dburl: `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWD}@${process.env.DB_HOST ?? 'localhost'}/${process.env.DB_NAME}`
   },
   {
     owners: owners,

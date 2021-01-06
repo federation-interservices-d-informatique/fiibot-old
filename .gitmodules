@@ -1,0 +1,3 @@
+[submodule "compose-multi-db"]
+	path = compose-multi-db
+	url = https://github.com/mrts/docker-postgresql-multiple-databases
