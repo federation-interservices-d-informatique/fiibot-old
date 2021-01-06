@@ -18,14 +18,14 @@ module.exports = class extends fiiCommand {
             return;
         }
         if(!args[0] || !args[1]) return;
-        if(!this.client.idb.has(args[0])) {
+        if(!(await this.client.idb.get(args[0]))) {
             message.channel.send(`L'utilisateur ${args[0]} n'existe pas!`);
         } else {
             this.client.idb.delete(args[0]);
         }
 
         message.channel.send('OK!');
-        let users: string[] = this.client.idb.get('registredusers');
+        let users: string[] = await this.client.idb.get('registredusers');
         users = users.filter((u) => {
             u != args[1]
         });

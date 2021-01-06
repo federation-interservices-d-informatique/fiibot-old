@@ -10,6 +10,7 @@ module.exports = class Auth extends (
     super(client, {
       name: "auth",
       description: "S'authetifier avec son nom d'utilisateur et son ID FII",
+      usage: `auth {username} {id}`
     });
   }
   async run(message: mokaMessage, args: string[]) {
@@ -24,7 +25,7 @@ module.exports = class Auth extends (
       message.delete(); // Supress ID
       return;
     }
-    if (!this.client.idb.has(args[0])) {
+    if (!(await this.client.idb.get(args[0]))) {
       message.channel.send("", {
         embed: {
           description: `Le nom d'utilisateur ${args[0]} n'existe pas!`,
@@ -33,7 +34,7 @@ module.exports = class Auth extends (
       });
       return;
     }
-    const hashedID = this.client.idb.get(args[0]);
+    const hashedID = await this.client.idb.get(args[0]);
     const res = await argon2i.verify(hashedID, args[1]).catch((e) => {});
     if (!res) {
       message.channel.send("", {

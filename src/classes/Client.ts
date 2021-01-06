@@ -1,13 +1,12 @@
 import { ClientOptions } from "discord.js";
 import { mokaClient, mokaClientOptions, mokaMessage } from "discordjs-moka";
 import { FiiConfiguration } from "../typings";
-import Enmap from "enmap";
-import { existsSync, mkdirSync } from "fs"
+import Keyv from "keyv";
 export default class FIIClient extends mokaClient {
   raidmode: boolean;
   msgcache: Map<string, Array<mokaMessage>>;
   fii: FiiConfiguration;
-  idb: Enmap;
+  idb: Keyv;
   constructor(djsOpts: ClientOptions, mokaOpts: mokaClientOptions, fiiOpts: FiiConfiguration) {
     super(djsOpts, mokaOpts);
     if(!fiiOpts.critLogChan) {
@@ -17,19 +16,6 @@ export default class FIIClient extends mokaClient {
       owners: fiiOpts.owners ?? fiiOpts.owners,
       critLogChan: fiiOpts.critLogChan    
     };
-    if(!existsSync(`${__dirname}/../../ids`)) {
-      try {
-        mkdirSync(`${__dirname}/../../ids`);
-      } catch(e) {
-        this.logger.error(`Unable to initialize: ${e.message}`, '[DB]')
-      }
-    }
-    this.idb = new Enmap({
-      name: "ids",
-      dataDir: `${__dirname}/../../ids/`,
-    }); 
-    (async () => {
-      await this.idb.defer;
-    });
+    this.idb = new Keyv(`postgresql://${process.env.IDB_USER}:${process.env.IDB_PASSWD}@${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? 5432}/${process.env.IDB_NAME}`)
   }
 }

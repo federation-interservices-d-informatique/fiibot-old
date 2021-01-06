@@ -34,7 +34,7 @@ module.exports = class IDCommand extends (
     /**
      * Make sure a use hasn't 2usernames
      */
-    const registred: string[] = this.client.idb.get('registredusers') || new Array();
+    const registred: string[] = await this.client.idb.get('registredusers') || new Array();
     if (registred.includes(message.author.id)) {
       message.channel.send('', {
         embed: {
@@ -54,7 +54,7 @@ module.exports = class IDCommand extends (
       );
       return;
     }
-    if (this.client.idb.has(args[0])) {
+    if (await this.client.idb.get(args[0])) {
       message.channel.send("", {
         embed: {
           description: `Le nom d'utilisateur ${args[0]} existe déjà dans la base de données, veuillez en choisir un autre!`,
@@ -66,8 +66,8 @@ module.exports = class IDCommand extends (
     /**
      * Used to generate the number (not the random)
      */
-    const currentMax = parseInt(this.client.idb.get("maxnum")) || 1;
-    this.client.idb.set("maxnum", currentMax + 1);
+    const currentMax = parseInt(await this.client.idb.get("maxnum")) || 1;
+    await this.client.idb.set("maxnum", currentMax + 1);
     /**
      * Sample ID:
      * FII-LPT-00005-8428605967-FII
@@ -97,12 +97,12 @@ module.exports = class IDCommand extends (
     const rndBytes = promisify(randomBytes);
     const salt = await rndBytes(32);
     const hashID = await argon2i.hash(id, salt);
-    this.client.idb.set(args[0], hashID);
+    await this.client.idb.set(args[0], hashID);
     message.channel.send("ID enregistré!");
     /**
      * Save the user id
      */
     registred.push(message.author.id);
-    this.client.idb.set("registredusers", registred);
+    await this.client.idb.set("registredusers", registred);
   }
 };
