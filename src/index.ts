@@ -1,6 +1,7 @@
 import { config as envconfig } from "dotenv";
 envconfig();
 import { owners } from "./config";
+import { Api } from "./API"
 import { mokaGuild, mokaHandler, mokaMessage } from "discordjs-moka";
 import Client from "./classes/Client";
 import {
@@ -39,6 +40,7 @@ client.on("ready", () => {
     client.fii.critLogChan = "794866866433556510";
     // FIIBot test server for FIIBOT beta
   }
+  const api = new Api(client);
   // Reset for preventing performance issues
 });
 client.on("guildMemberAdd", async (member: GuildMember) => {
