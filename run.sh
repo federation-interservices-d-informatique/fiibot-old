@@ -30,4 +30,5 @@ $SUDO docker-compose build
 
 echo -e "\e[96mStarting ${APP}..."
 echo ""
+docker-compose down
 docker-compose up -d
