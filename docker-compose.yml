@@ -13,6 +13,7 @@ services:
       - "./:/app/bot"
     networks:
       - bot
+    
   bot:
     build: .
     networks: 
@@ -21,3 +22,5 @@ services:
       - DB_HOST=database
     depends_on:
       - database
+    ports: 
+      - "3000:3000"
