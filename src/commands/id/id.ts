@@ -6,6 +6,7 @@ import { chknum } from "../../Util/numbers";
 import { argon2i } from "argon2-ffi";
 import { promisify } from "util";
 import { randomBytes } from "crypto";
+import { TextChannel } from "discord.js";
 module.exports = class IDCommand extends (
   fiiCommand
 ) {
@@ -27,25 +28,30 @@ module.exports = class IDCommand extends (
       });
       return;
     }
-    if(args.length > 1) {
-      message.channel.send('Les noms d\'utilisateurs ne doivent pas contenir d\'espaces!');
+    if (args.length > 1) {
+      message.channel.send(
+        "Les noms d'utilisateurs ne doivent pas contenir d'espaces!"
+      );
       return;
     }
     /**
      * Make sure a use hasn't 2usernames
      */
-    const registred: string[] = await this.client.idb.get('registredusers') || new Array();
+    const registred: string[] =
+      (await this.client.idb.get("registredusers")) || new Array();
     if (registred.includes(message.author.id)) {
-      message.channel.send('', {
+      message.channel.send("", {
         embed: {
           description: `${message.author} Vous avez déjà un nom d'utilisateur! Si vous souhaitez l'avez oublié, veuillez contacter le C.A de la FII!`,
-          color: 'RANDOM'
-        }
+          color: "RANDOM",
+        },
       });
       return;
     }
-    if(!/[0-Z]{1,}/gmi.test(args[0])) {
-      message.channel.send('Le nom d\'utilisateur ne doit que contenir des lettres et des chiffres!')
+    if (!/[0-Z]{1,}/gim.test(args[0])) {
+      message.channel.send(
+        "Le nom d'utilisateur ne doit que contenir des lettres et des chiffres!"
+      );
       return;
     }
     if (args[0] == "maxnum" || args[0] == "registredusers") {
@@ -100,9 +106,27 @@ module.exports = class IDCommand extends (
     await this.client.idb.set(args[0], hashID);
     message.channel.send("ID enregistré!");
     /**
-     * Save the user id
+     * Save the user id to prevent id recreation
      */
     registred.push(message.author.id);
     await this.client.idb.set("registredusers", registred);
+    let chan = (await this.client.channels.fetch(
+      this.client.fii.idlogs.toString(),
+      true,
+      true
+    )) as TextChannel;
+    if (chan) {
+      chan.send("", {
+        embed: {
+          title: "Logs de création d'ids",
+          description: `${message.author.tag} (${
+            message.author.id
+          }) vient de créer un id sur ${
+            servers.get(message.guild.id) || message.guild.id
+          } avec le nom d'utilisateur ${args[0]}`,
+          color: 'BLUE'
+        },
+      });
+    } 
   }
 };
