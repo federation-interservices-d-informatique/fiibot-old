@@ -10,12 +10,12 @@ class Api {
       await next();
       if (ctx.path === "/api/commands") {
         let commands = new Array();
-        this.client.handler.commands.forEach(c => {
-            commands.push({
-                name: c.infos.name,
-                description: c.infos.description
-            })
-        })
+        this.client.handler.commands.forEach((c) => {
+          commands.push({
+            name: c.infos.name,
+            description: c.infos.description,
+          });
+        });
         ctx.body = `${JSON.stringify(commands)}`;
       }
     });

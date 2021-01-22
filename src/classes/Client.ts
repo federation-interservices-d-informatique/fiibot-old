@@ -13,8 +13,9 @@ export default class FIIClient extends mokaClient {
       throw new Error(`Please add a valid channel for critical logs!`)
     }
     this.fii = {
-      owners: fiiOpts.owners ?? fiiOpts.owners,
-      critLogChan: fiiOpts.critLogChan    
+      owners: fiiOpts.owners ?? [],
+      critLogChan: fiiOpts.critLogChan,
+      idlogs: fiiOpts.idlogs
     };
     this.idb = new Keyv(`postgresql://${process.env.IDB_USER}:${process.env.IDB_PASSWD}@${process.env.DB_HOST ?? 'localhost'}/${process.env.IDB_NAME}`)
   }
