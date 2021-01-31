@@ -9,7 +9,7 @@
   "dependencies": {
     "@keyv/postgres": "git+https://github.com/Woomy4680-exe/keyv-postgres.git",
     "@types/keyv": "^3.1.1",
-    "@types/koa": "^2.11.6",
+    "@types/koa": "^2.11.7",
     "argon2-ffi": "^2.0.0",
     "discord.js": "^12.5.1",
     "discordjs-moka": "^3.1.0",
