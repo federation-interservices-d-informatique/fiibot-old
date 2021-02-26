@@ -1,3 +1,4 @@
+import { ID_REGEX, INVITATION_REGEX } from "./Constants/Constants"
 import { config as envconfig } from "dotenv";
 envconfig();
 import { owners } from "./config";
@@ -111,8 +112,7 @@ client.on('message', async (msg: mokaMessage) => {
   if(autoris.includes(msg.channel.id)) return;
   if(msg.member.hasPermission('ADMINISTRATOR')) return;
   if(client.isOwner(msg.author)) return;
-  const inviteregex = /(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/[0-Z]{1,20}/gim
-  if(inviteregex.test(msg.content)) {
+  if(INVITATION_REGEX.test(msg.content)) {
     const autoriseRegex = /(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/(yHhkjZhzBX|BKRuPP2|wNcrRpD|sXEH7cB|8KDQzwP)/gim
     if(autoriseRegex.test(msg.content)) return // Skip FII invites
     let content = msg.content.replace(/(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/[0-Z]{1,20}/gim, '{Invitation censurée}');
@@ -177,13 +177,12 @@ client.on("messageUpdate", async (oldm: mokaMessage, newm: mokaMessage) => {
       await newm.fetch();
     } catch (e) {}
   }
-  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gim;
   if (newm.content === oldm.content) return;
-  if (idregex.test(newm.content)) {
+  if (ID_REGEX.test(newm.content)) {
     newm.delete().catch((e) => {});
     return;
   }
-  if (idregex.test(newm.content) || idregex.test(oldm.content)) return; // Don't log ids
+  if (ID_REGEX.test(newm.content) || ID_REGEX.test(oldm.content)) return; // Don't log ids
   const chan = client.channels.resolve(
     await newm.guild.settings.get("logchan")
   ) as TextChannel;
@@ -217,10 +216,9 @@ client.on("message", async (msg) => {
     } catch (e) {}
   }
   if (!msg.guild) return;
-  const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gim;
-  if (idregex.test(msg.content)) {
+  if (ID_REGEX.test(msg.content)) {
     let content = msg.content.replace(
-      idregex,
+      ID_REGEX,
       "FII-SERVEUR-\\*\\*\\*\\*\\*\\*-\\*\\*\\*\\*\\*\\*\\*\\*\\*\\*-FII"
     );
     content = content.replace(/@(here|everyone)/gim, "`MENTION INTERDITE`");
