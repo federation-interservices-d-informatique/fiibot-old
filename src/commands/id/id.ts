@@ -84,7 +84,7 @@ module.exports = class IDCommand extends (
     );
     const numb = chknum(currentMax.toString());
     const id = `FII-${
-      servers.get(message.guild.id) || "HUB"
+      servers[message.guild.id] || "HUB"
     }-${numb}-${random}-FII`;
     message.author.send("", {
       embed: {
@@ -122,7 +122,7 @@ module.exports = class IDCommand extends (
           description: `${message.author.tag} (${
             message.author.id
           }) vient de créer un id sur ${
-            servers.get(message.guild.id) || message.guild.id
+            servers[message.guild.id] || message.guild.id
           } avec le nom d'utilisateur ${args[0]}`,
           color: 'BLUE'
         },

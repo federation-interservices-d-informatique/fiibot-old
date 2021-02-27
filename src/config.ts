@@ -12,10 +12,10 @@ const owners = [
   606658458649100288, // Abysmal#3490
 ]; // Fii members
 export { owners };
-const servers = new Map();
-servers.set('456901919344951298', 'CLI'); // CLI - Communauté Linuxienne indépendante
-servers.set('622831434427662346', 'LPT'); // LPT - Linux pour Tous
-servers.set('696156347946762240', 'MIM'); // MicroMax
-servers.set('745664551831339150', 'ADP'); // Atelier des projets
-
+const servers = {
+  '456901919344951298': 'CLI',
+  '622831434427662346': 'LPT',
+  '696156347946762240': 'MIM',
+  '745664551831339150': 'ADP'
+}
 export { servers }
