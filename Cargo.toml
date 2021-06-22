@@ -5,8 +5,8 @@ authors = ["Woomy4680-exe <matzar1808@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-serenity = "0.10.5"
-tokio = { features = ["full"], version = "1.4.0" }
+serenity = "0.10.8"
+tokio = { features = ["full"], version = "1.7.0" }
 
 [profile.release]
 lto = true
