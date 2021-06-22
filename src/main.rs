@@ -27,9 +27,9 @@ async fn main() -> Result<()> {
     if !serenity::client::validate_token(&token).is_ok() {
         return Err(error("Invalid token!"));
     }
-
+    let prefix = get_env_var("PREFIX").unwrap_or_else(|_| String::from("&"));
     let fw = StandardFramework::new()
-        .configure(|c| c.prefix("&"))
+        .configure(|c| c.prefix(&prefix))
         .group(&GENERAL_GROUP);
     let mut client = Client::builder(&token)
         .event_handler(Handler)
