@@ -23,7 +23,7 @@ impl EventHandler for Handler {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let token = get_env_var("TOKEN").unwrap_or_else(|_| String::from("TOKEN_NOT_FOUND"));
+    let token = get_env_var("DISCORD_TOKEN").unwrap_or_else(|_| String::from("TOKEN_NOT_FOUND"));
     if !serenity::client::validate_token(&token).is_ok() {
         return Err(error("Invalid token!"));
     }
