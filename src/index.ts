@@ -87,39 +87,45 @@ client.on("message", async (msg: mokaMessage) => {
     msg.author.send(`Vous avez été éjecté(e) de ${msg.guild.name} pour spam!`);
     msg.channel.send(`${msg.author} a été kick pour spam!`);
     msg.member.kick(`Spam dans ${msg.channel}`);
+    let cstring = "";
     dupe.forEach(async (m) => {
       try {
         await m.fetch();
+        cstring = `${cstring}${cstring == "" ? "" : "\n"}**${m.author.tag} (${m.author.id})**: ${m.content}`
         if (!m.deleted) m.delete();
-      } catch (e) {}
+      } catch (e) { }
     });
+    let chan = await client.channels.fetch(client.fii.critLogChan.toString(), true, true) as TextChannel;
+    if (chan) {
+      chan.send(`Log de spam sur ${msg.guild.name}.\n${cstring}`)
+    }
   }
 });
 client.on('message', async (msg: mokaMessage) => {
-  if(msg.partial) {
+  if (msg.partial) {
     try {
       await msg.fetch()
-    } catch(e) {
+    } catch (e) {
       return;
     }
   }
-  if(!msg.guild) return;
-  if(msg.guild.settings.get('autoriseinvites')) return;
-  const autoris: Array<string> = await msg.guild.settings.get('autorisedinviteschans')  || new Array();
-  if(autoris.includes(msg.channel.id)) return;
-  if(msg.member.hasPermission('ADMINISTRATOR')) return;
-  if(client.isOwner(msg.author)) return;
-  if(INVITATION_REGEX.test(msg.content)) {
+  if (!msg.guild) return;
+  if (msg.guild.settings.get('autoriseinvites')) return;
+  const autoris: Array<string> = await msg.guild.settings.get('autorisedinviteschans') || new Array();
+  if (autoris.includes(msg.channel.id)) return;
+  if (msg.member.hasPermission('ADMINISTRATOR')) return;
+  if (client.isOwner(msg.author)) return;
+  if (INVITATION_REGEX.test(msg.content)) {
     const autoriseRegex = /(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/(yHhkjZhzBX|BKRuPP2|wNcrRpD|sXEH7cB|8KDQzwP)/gim
-    if(autoriseRegex.test(msg.content)) return // Skip FII invites
+    if (autoriseRegex.test(msg.content)) return // Skip FII invites
     let content = msg.content.replace(/(https:\/\/|http:\/\/|)?(www)?discord.(com\/invite|gg)\/[0-Z]{1,20}/gim, '{Invitation censurée}');
     content = content.replace(/@(here|everyone)/gim, "`MENTION INTERDITE`");
     content = content.replace(/<@&[0-9]{18}>/gim, "`Mention de rôle`");
-    if(!msg.deleted) msg.delete();
-    if(msg.channel.type === 'text') {
+    if (!msg.deleted) msg.delete();
+    if (msg.channel.type === 'text') {
       const hooks = await msg.channel.fetchWebhooks();
       let hook = hooks.first();
-      if(!hook) {
+      if (!hook) {
         hook = await msg.channel.createWebhook('FIIBOT');
       }
       hook.send(content, {
@@ -141,7 +147,7 @@ client.on("messageDelete", async (msg: mokaMessage) => {
       return
     }
   }
-  if(msg.author.id == client.user.id) return
+  if (msg.author.id == client.user.id) return
   const idregex = /FII-(LPT|CLI|MIM|HUB|ADP)-[0-9]{6}-[0-9]{10}-FII/gim;
   if (idregex.test(msg.content)) return; //Ignore IDS
   if (msg.content.startsWith(`${client.moka.prefix}auth`)) return; // Don't log guild auths (prevent ID logging)
@@ -172,11 +178,11 @@ client.on("messageUpdate", async (oldm: mokaMessage, newm: mokaMessage) => {
   if (newm.partial) {
     try {
       await newm.fetch();
-    } catch (e) {}
+    } catch (e) { }
   }
   if (newm.content === oldm.content) return;
   if (ID_REGEX.test(newm.content)) {
-    newm.delete().catch((e) => {});
+    newm.delete().catch((e) => { });
     return;
   }
   if (ID_REGEX.test(newm.content) || ID_REGEX.test(oldm.content)) return; // Don't log ids
@@ -210,7 +216,7 @@ client.on("message", async (msg) => {
   if (msg.partial) {
     try {
       await msg.fetch();
-    } catch (e) {}
+    } catch (e) { }
   }
   if (!msg.guild) return;
   if (ID_REGEX.test(msg.content)) {
@@ -256,25 +262,24 @@ client.on("roleUpdate", async (old: fiiRole, now: fiiRole) => {
     : "";
   old.mentionable != now.mentionable
     ? fields.push({
-        name: `Le role ${
-          old.mentionable
-            ? "n'est plus mentionnable"
-            : "est devenu mentionnable"
+      name: `Le role ${old.mentionable
+          ? "n'est plus mentionnable"
+          : "est devenu mentionnable"
         }`,
-        value: `** **`,
-      })
+      value: `** **`,
+    })
     : "";
   old.hexColor != now.hexColor
     ? fields.push({
-        name: `Le role à changé de couleur!`,
-        value: `Ancienne: \`${old.hexColor}\`\nNouvelle: \`${now.hexColor}\``,
-      })
+      name: `Le role à changé de couleur!`,
+      value: `Ancienne: \`${old.hexColor}\`\nNouvelle: \`${now.hexColor}\``,
+    })
     : "";
   old.permissions != now.permissions
     ? fields.push({
-        name: "Le role à changé de permissions!",
-        value: `Anciennes:${old.permissions.toArray().length == 0 ? "Aucune" : old.permissions.toArray().map(p => `\`${p}\``).toString()}\nNouvelles: ${now.permissions.toArray().length == 0 ? "Aucune" : now.permissions.toArray().map(p => `\`${p}\``).toString()}`,
-      })
+      name: "Le role à changé de permissions!",
+      value: `Anciennes:${old.permissions.toArray().length == 0 ? "Aucune" : old.permissions.toArray().map(p => `\`${p}\``).toString()}\nNouvelles: ${now.permissions.toArray().length == 0 ? "Aucune" : now.permissions.toArray().map(p => `\`${p}\``).toString()}`,
+    })
     : "";
   chan
     .send("", {
@@ -286,7 +291,7 @@ client.on("roleUpdate", async (old: fiiRole, now: fiiRole) => {
         fields: fields,
       },
     })
-    .catch((e) => {});
+    .catch((e) => { });
 });
 client.on("roleDelete", async (role: fiiRole) => {
   const chan = client.channels.resolve(
@@ -335,7 +340,7 @@ client.on("emojiUpdate", async (old: fiiGuildEmoji, now: fiiGuildEmoji) => {
         fields: fields,
       },
     })
-    .catch((e) => {});
+    .catch((e) => { });
 });
 client.on("emojiDelete", async (emj: fiiGuildEmoji) => {
   const chan = client.channels.resolve(
@@ -361,7 +366,7 @@ client.on("guildBanAdd", async (guild: mokaGuild, user) => {
     limit: 1
   });
   const event = log.entries.first();
-  
+
   chan.send("", {
     embed: {
       timestamp: new Date(),
